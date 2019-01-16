@@ -1,0 +1,29 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Home
+{% endblock %}
+
+{% block main %}
+    <table class="table table-bordered">
+        <thead>
+            <th>Question</th>
+            <th>Answers</th>
+        </thead>
+        <tbody>
+            {% for x in questionlist %}
+            <tr>
+                <td>{{ x.symbol }}</td>
+                <td>{{ x.number_of_shares }}</td>
+
+            </tr>
+            {% endfor %}
+            <tr>
+                <td></td>
+                <td></td>
+                <td>Remaining Balance:</td>
+                <td>{{ available_cash}}</td>
+            </tr>
+        </tbody>
+    </table>
+{% endblock %}

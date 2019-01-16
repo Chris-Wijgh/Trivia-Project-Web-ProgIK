@@ -8,13 +8,29 @@ from functools import wraps
 from html.parser import HTMLParser
 
 
-def login():
+#def login():
     # login function
-    """ TODO Chris """
+    #""" TODO Chris """
 
-def register():
+def apology(message, code=400):
+    ### verandert ###
+    """Renders message as an apology to user."""
+    def escape(s):
+        """
+        Escape special characters.
+
+        https://github.com/jacebrowning/memegen#special-characters
+        """
+        for old, new in [("-", "--"), (" ", "-"), ("_", "__"), ("?", "~q"),
+                         ("%", "~p"), ("#", "~h"), ("/", "~s"), ("\"", "''")]:
+            s = s.replace(old, new)
+        return s
+    return render_template("apology.html", top=code, bottom=escape(message)), code
+
+
+# def register():
     # registration and login function
-    """ TODO Chris """
+    #""" TODO Chris """
 
 def pHash():
     # encrypts user password
@@ -36,9 +52,8 @@ def ranks():
     # gives user ranking in NR and % lists
     """ TODO Chris """
 
-def questions():
-    # gives list of lists of questions from external DB
-    class Client(object):
+class Questions(object):
+        # gives list of lists of questions from external DB
         def __init__(self):
                 self.__API_BASEURL = 'https://opentdb.com'
                 self.__API_ENDPOINT = '/api.php'
@@ -47,7 +62,7 @@ def questions():
 
         def __apiRequest(self, url, params):
             """
-                Used internally by the Client object to make calls to the API.
+                Used internally by the question object to make calls to the API.
                 Parameters:
                     -url: the URL of the API endpoint.
                     -params: parameters for the request.
@@ -64,7 +79,7 @@ def questions():
                 assert response['response_code'] == 0
                 return response
             except:
-
+                raise ValueError
                 ''' TODO '''
                 # return apology('Something went wrong')
 
@@ -115,6 +130,8 @@ def questions():
 
 
                 return questions_list
+    # gives list of lists of questions from external DB
+
 
 def store():
     # stores data of answered question in user's stat DB
@@ -132,6 +149,6 @@ def compare():
     # search for onther user's stats based on user name
     """ TODO Chris """
 
-def result():
-    # checks answers + provides correct answer
-    """ TODO Dido """
+# def result():
+#     # checks answers + provides correct answer
+#     """ TODO Dido """
