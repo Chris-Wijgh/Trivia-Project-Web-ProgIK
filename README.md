@@ -42,5 +42,17 @@ flask http://flask.pocoo.org/<br>
 passlib. https://passlib.readthedocs.io/en/stable/lib/passlib.apps.html/<br>
 sql https://www.w3schools.com/sql/<br>
 
-
-
+### Views
+<img src="https://i.imgur.com/yDj1ZRy.png" width="200"> <br>
+#### frontpage
+<img src="https://i.imgur.com/S79mOVy.png" width="200"> <br>
+#### login-page
+<img src="https://i.imgur.com/oCVGGU4.png" width="200"> <br>
+### register-page
+<img src="https://i.imgur.com/sIfgpEI.png" width="200"> <br>
+### index
+<img src="https://i.imgur.com/ZpZ4hMQ.png" width="200"> <br>
+### vragen
+<img src="https://i.imgur.com/YtBoNwt.png" width="200"> <br>
+### resultaten
+<img src="https://i.imgur.com/YNVrxN7.png" width=200"> <br>                                                                                                   
