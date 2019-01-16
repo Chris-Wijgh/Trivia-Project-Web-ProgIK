@@ -43,7 +43,7 @@ db = SQL("sqlite:///finance.db")
 @app.route("/index", methods=["GET", "POST"])
 @login_required
 def index():
-
+comment
 """
 
 
