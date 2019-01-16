@@ -55,4 +55,8 @@ sql https://www.w3schools.com/sql/<br>
 ### vragen
 <img src="https://i.imgur.com/YtBoNwt.png" width="200"> <br>
 ### resultaten
-<img src="https://i.imgur.com/YNVrxN7.png" width=200"> <br>                                                                                                   
+<img src="https://i.imgur.com/YNVrxN7.png" width="200"> <br>
+### vergelijk
+<img src="https://i.imgur.com/mdYQ6Qq.png" width="200"> <br>
+### top10
+<img src="https://i.imgur.com/0EDiLhv.png" width="200"> <br>
