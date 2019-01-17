@@ -41,11 +41,27 @@ def front_page():
 
 # login
 @app.route("/login", methods=["GET", "POST"])
-def login():
-    return apology('something went wrong')
-# login page for registered users
+def login_page():
+    if login() == True:
+        # remember which user has logged in
+        rows = db.execute("SELECT * FROM users WHERE username = :username", username=request.form.get("username"))
+        session["user_id"] = rows[0]["id"]
+        # redirect user to home page
+        return redirect(url_for("index"))
 
-### TODO Chris
+    # else if user reached route via GET (as by clicking a link or via redirect)
+    else:
+        return render_template("login.html")
+
+@app.route("/logout")
+def logout():
+    # logs user out
+
+    # forget any user_id
+    session.clear()
+
+    # redirect user to login form
+    return redirect(url_for("login"))
 
 
 # register
@@ -99,16 +115,24 @@ def register():
 
 # index
 @app.route("/index", methods=["GET", "POST"])
-#@L
+@L
 def index():
-    return apology('something went wrong')
-# user homepage and own stats
+    # generate user stats
+    stats()
+    correct = correct
+    score = score
 
-### TODO Chris
+    # generate user ranking in all lists
+    ranks()
+    rank_nr = rank_nr
+    rank_score = rank_score
+
+    return render_template("index.html", correct=correct, score=score, rank_nr=rank_nr, rank_score=rank_score)
+
 
 # questions
 @app.route("/questions", methods=["GET", "POST"])
-#@L
+@L
 def questions():
     return apology('something went wrong')
 
@@ -118,7 +142,7 @@ def questions():
 
 # result
 @app.route("/result", methods=["GET"])
-#@L
+@L
 def result():
     return apology('something went wrong')
 # user gets right/wrong + correct answers, stores score stats in user-stats DB
@@ -127,70 +151,75 @@ def result():
 
 # Top 10
 @app.route("/top10", methods=["GET"])
-#@L
+@L
 def top10():
-    return apology('something went wrong')
-# user gets top 10 lists of NR questions correct and % questions correct
+    # get the top 10 lists
+    topNR()
+    topP()
+    nr_rank_10 = nr_rank_10
+    score_rank_10 = score_rank_10
 
-### TODO Chris
+    return render_template("top10.html", nr_rank_10=nr_rank_10, score_rank_10=score_rank_10)
 
 # compare
 @app.route("/compare", methods=["GET", "POST"])
-#@L
-def compare():
-    return apology('something went wrong')
-# user can search for onther user's stats based on user name
+@L
+def compare_page():
+    # get and present the info after the user asks for it
+    if request.method == "POST":
 
-### TODO Chris
+        # get the user's stats and ranks
+        stats()
+        correct = correct
+        score = score
+
+        ranks()
+        rank_nr = rank_nr
+        rank_score = rank_score
+
+
+        # get the other user's stats and ranks
+        other_user = request.form.get("other_user_name")
+        compare(other_user)
+
+        other_correct = other_correct
+        other_score = other_score
+        other_rank_nr = other_rank_nr
+        other_rank_score = other_rank_score
+
+        return render_template("compared.html", correct=correct, score=score, rank_nr=rank_nr, rank_score=rank_score, other_correct=other_correct, other_score=other_score, other_rank_nr=other_rank_nr, other_rank_score=other_rank_score)
+
+    # otherwise give the basic page
+    return render_template("compare.html")
 
 
 # compared
 @app.route("/compared", methods=["GET", "POST"])
-#@L
+@L
 def compared():
-    return apology('something went wrong')
-# user gets stats based on query in compare + can search again
+    # get and present more info if the user asks for it
+    if request.method == "POST":
 
-### TODO Chris
+        # get the user's stats and ranks
+        stats()
+        correct = correct
+        score = score
 
-'''
-
-# apology
- @app.route("/apology", methods=["GET"])
- def a():
-     return apology('something went wrong')
- page when something goes wrong
-
-### TODO Jesper
-'''
+        ranks()
+        rank_nr = rank_nr
+        rank_score = rank_score
 
 
+        # get the other user's stats and ranks
+        other_user = request.form.get("other_user_name")
+        compare(other_user)
 
+        other_correct = other_correct
+        other_score = other_score
+        other_rank_nr = other_rank_nr
+        other_rank_score = other_rank_score
 
+        return render_template("compared.html", correct=correct, score=score, rank_nr=rank_nr, rank_score=rank_score, other_correct=other_correct, other_score=other_score, other_rank_nr=other_rank_nr, other_rank_score=other_rank_score)
 
-
-
-
-
-
-
-##
-##      examples and database import. NEEDS CHANGE.
-##
-
-# """
-
-# # configure CS50 Library to use SQLite database
-# db = SQL("sqlite:///finance.db")
-
-
-# @app.route("/")
-# @app.route("/index", methods=["GET", "POST"])
-# @login_required
-# def index():
-
-# """
-
-
-
-## test
+    # otherwise give the basic page if the user somehow lands here without being sent by "compare"
+    return render_template("compared.html")

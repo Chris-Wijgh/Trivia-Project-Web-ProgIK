@@ -1,3 +1,6 @@
+from cs50 import SQL
+from passlib.apps import custom_app_context as pwd_context
+
 import csv
 import urllib.request
 import requests
@@ -7,10 +10,33 @@ from flask import redirect, render_template, request, session
 from functools import wraps
 from html.parser import HTMLParser
 
+db = SQL("sqlite:///trivia.db")
 
-#def login():
-    # login function
-    #""" TODO Chris """
+
+def login():
+    # forget any user_id
+    session.clear()
+
+    # if user reached route via POST (as by submitting a form via POST)
+    if request.method == "POST":
+
+        # ensure username was submitted
+        if not request.form.get("username"):
+            return apology("must provide username")
+
+        # ensure password was submitted
+        elif not request.form.get("password"):
+            return apology("must provide password")
+
+        # query database for username
+        rows = db.execute("SELECT * FROM users WHERE username = :username", username=request.form.get("username"))
+
+        # ensure username exists and password is correct
+        if len(rows) != 1 or not pwd_context.verify(request.form.get("password"), rows[0]["hash"]):
+            return apology("invalid username and/or password")
+
+        return True
+
 
 def apology(message, code=400):
     ### verandert ###
@@ -32,25 +58,61 @@ def apology(message, code=400):
     # registration and login function
     #""" TODO Chris """
 
-def pHash():
-    # encrypts user password
-    """ TODO Chris """
 
-def L():
+def L(f):
     # check if user is logged in
-    """ TODO Chris """
+    """
+    Decorate routes to require login.
 
-def logout():
-    # logs user out
-    """ TODO Chris """
+    http://flask.pocoo.org/docs/0.12/patterns/viewdecorators/
+    """
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if session.get("user_id") is None:
+            return redirect("/login")
+        return f(*args, **kwargs)
+    return decorated_function
+
 
 def stats():
-    #  gives user NR correct and % correct
-    """ TODO Chris """
+    numbers = db.execute("SELECT * FROM stats WHERE user_id = :user_id", user_id=session["user_id"])
+    questions_nr = numbers[0]['vragen_beantwoord']
+    correct = numbers[0]['vragen_goed']
+    score = (correct / questions_nr) * 100 * correct
+
+    return correct, score
+
 
 def ranks():
-    # gives user ranking in NR and % lists
-    """ TODO Chris """
+    # generate a list of dicts, ranked by Nr vragen goed, highest first
+    numbers_ranked = list(reversed(db.execute("SELECT user_id, vragen_goed FROM stats GROUP by vragen_goed")))
+
+    # gets the score data for all users in a list of dictionaries
+    data = db.execute("SELECT user_id, vragen_goed, vragen_beantwoord FROM stats GROUP by vragen_goed")
+
+    # create a list of id nrs paired with scores
+    scores = list()
+    for item in data:
+        score = (item["vragen_goed"] / item["vragen_beantwoord"]) * 100 * item["vragen_goed"]
+        u_id = item["user_id"]
+        scores.append({"user_id":u_id, "user_score":score})
+
+    scores_ranked = list(reversed(scores))
+
+
+    # generate the user's ranks for Nr of questions correct and score
+    ##
+    ## need to find the users's place in the list, somehow
+    ##
+
+    # temporary stuff till I get the above working
+    rank_nr = 10
+    rank_score = 15
+
+    return rank_nr, rank_score
+
+ranks()
+
 
 class Questions(object):
         # gives list of lists of questions from external DB
@@ -139,15 +201,69 @@ def store():
 
 def topNR():
     # gives top 10 of users based on questions answered correctly
-    """ TODO Chris """
+
+    # gives inverse ranking of users based on questions correct
+    nr_rank_low = db.execute("SELECT user_id, vragen_goed FROM stats GROUP by vragen_goed")
+
+    # generate highest 10 ranking users based on questions correct
+    nr_rank_10 = list()
+    counter = 0
+    if counter < 10:
+        for item in reversed(nr_rank_low):
+            nr_rank_10.append(item)
+            counter += 1
+    return nr_rank_10
+
 
 def topP():
-    # gives top 10 of users based on % questions answered correctly
-    """ TODO Chris """
+    # gives top 10 of users based on score
 
-def compare():
-    # search for onther user's stats based on user name
-    """ TODO Chris """
+    # gets the relevant data for all users in a list of dictionaries
+    data = db.execute("SELECT user_id, vragen_goed, vragen_beantwoord FROM stats GROUP by vragen_goed")
+
+    # create a list of id nrs paired with scores
+    scores = list()
+    for item in data:
+        score = (item["vragen_goed"] / item["vragen_beantwoord"]) * 100 * item["vragen_goed"]
+        u_id = item["user_id"]
+        scores.append({"user_id":u_id, "user_score":score})
+
+    # generate highest 10 ranking users based on score
+    score_rank_10 = list()
+    counter = 0
+    if counter < 10:
+        for item in reversed(scores):
+            score_rank_10.append(item)
+            counter += 1
+
+    return score_rank_10
+
+
+def compare(other_user):
+    # search for other user's ID based on user name
+    other_id = db.execute("SELECT user_id FROM userdata WHERE username = :username", username=other_user)
+
+    # search for other user's stat's based on other user's ID
+    numbers = db.execute("SELECT * FROM stats WHERE user_id = :user_id", user_id=other_id)
+    questions_nr = numbers[0]['vragen_beantwoord']
+    other_correct = numbers[0]['vragen_goed']
+    other_score = (other_correct / questions_nr) * 100 * other_correct
+
+    # generate a list of dicts, ranked by Nr vragen goed, lowest first
+    numbers_ranked = db.execute("SELECT user_id, vragen_goed FROM stats GROUP by vragen_goed")
+
+    # generate the same stuff for other_user as for user under "ranks"
+    ##
+    ##
+    ##
+
+    # temporary stuff till I get the above working
+    other_rank_nr = 9
+    other_rank_score = 14
+
+    return other_correct, other_score, other_rank_nr, other_rank_score
+
+
 
 # def result():
 #     # checks answers + provides correct answer
