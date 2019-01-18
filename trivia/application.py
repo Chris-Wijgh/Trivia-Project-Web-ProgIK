@@ -31,12 +31,12 @@ db = SQL("sqlite:///trivia.db")
 
 
 @app.route("/")
-@app.route("/index", methods=["GET"])
+@app.route("/frontpage", methods=["GET"])
 def front_page():
 
     ''' front page linking to login and registration '''
 
-    return apology('something went wrong')
+    return render_template("frontpage.html")
 
 
 ### TODO Jesper
