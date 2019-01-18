@@ -13,7 +13,7 @@ from html.parser import HTMLParser
 db = SQL("sqlite:///trivia.db")
 
 
-def login():
+def loginF():
     # forget any user_id
     session.clear()
 

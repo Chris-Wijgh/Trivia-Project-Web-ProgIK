@@ -44,11 +44,11 @@ def front_page():
 
 # login
 @app.route("/login", methods=["GET", "POST"])
-def login_page():
+def login():
 
     ''' logs user in '''
 
-    if login() == True:
+    if loginF() == True:
         # remember which user has logged in
         rows = db.execute("SELECT * FROM users WHERE username = :username", username=request.form.get("username"))
         session["user_id"] = rows[0]["id"]
