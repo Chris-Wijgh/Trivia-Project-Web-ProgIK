@@ -29,12 +29,15 @@ db = SQL("sqlite:///trivia.db")
 
 
 
-# front page
+
 @app.route("/")
 @app.route("/index", methods=["GET"])
 def front_page():
+
+    ''' front page linking to login and registration '''
+
     return apology('something went wrong')
-# front page linking to login and registration
+
 
 ### TODO Jesper
 
@@ -42,10 +45,14 @@ def front_page():
 # login
 @app.route("/login", methods=["GET", "POST"])
 def login_page():
+
+    ''' logs user in '''
+
     if login() == True:
         # remember which user has logged in
         rows = db.execute("SELECT * FROM users WHERE username = :username", username=request.form.get("username"))
         session["user_id"] = rows[0]["id"]
+
         # redirect user to home page
         return redirect(url_for("index"))
 
@@ -55,7 +62,8 @@ def login_page():
 
 @app.route("/logout")
 def logout():
-    # logs user out
+
+    '''' logs user out '''
 
     # forget any user_id
     session.clear()
@@ -67,6 +75,9 @@ def logout():
 # register
 @app.route("/register", methods=["GET", "POST"])
 def register():
+
+    ''' registers new user '''
+
     # forget any user_id
     session.clear()
 
@@ -117,7 +128,9 @@ def register():
 @app.route("/index", methods=["GET", "POST"])
 @L
 def index():
-    # generate user stats
+
+    ''' generate user stats '''
+
     stats()
     correct = correct
     score = score
@@ -134,26 +147,28 @@ def index():
 @app.route("/questions", methods=["GET", "POST"])
 @L
 def questions():
+
+    ''' user gets trivia questions to answer '''
+
     return apology('something went wrong')
 
-# user gets trivia questions to answer
-
-### TODO Dido
 
 # result
 @app.route("/result", methods=["GET"])
 @L
 def result():
-    return apology('something went wrong')
-# user gets right/wrong + correct answers, stores score stats in user-stats DB
 
-### TODO Dido
+    ''' user gets right/wrong + correct answers, stores score stats in user-stats DB '''
+
+    return apology('something went wrong')
 
 # Top 10
 @app.route("/top10", methods=["GET"])
 @L
 def top10():
-    # get the top 10 lists
+
+    ''' get the top 10 lists '''
+
     topNR()
     topP()
     nr_rank_10 = nr_rank_10
@@ -165,7 +180,9 @@ def top10():
 @app.route("/compare", methods=["GET", "POST"])
 @L
 def compare_page():
-    # get and present the info after the user asks for it
+
+    ''' get and present the info after the user asks for it '''
+
     if request.method == "POST":
 
         # get the user's stats and ranks
@@ -197,7 +214,9 @@ def compare_page():
 @app.route("/compared", methods=["GET", "POST"])
 @L
 def compared():
-    # get and present more info if the user asks for it
+
+    ''' get and present more info if the user asks for it '''
+
     if request.method == "POST":
 
         # get the user's stats and ranks
