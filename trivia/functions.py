@@ -84,8 +84,21 @@ def stats():
 
 
 def ranks():
+    rank_nr = 0
+    rank_score = 0
     # generate a list of dicts, ranked by Nr vragen goed, highest first
     numbers_ranked = list(reversed(db.execute("SELECT user_id, vragen_goed FROM stats GROUP by vragen_goed")))
+
+    # add a rank Nr to the ordered entries
+    counter = 1
+    for item in numbers_ranked:
+        item["rank"] = counter
+        counter += 1
+
+    # retrieve the user's entry
+    for item in numbers_ranked:
+        if item["user_id"] == session["user_id"]:
+            rank_nr = item["rank"]
 
     # gets the score data for all users in a list of dictionaries
     data = db.execute("SELECT user_id, vragen_goed, vragen_beantwoord FROM stats GROUP by vragen_goed")
@@ -99,19 +112,20 @@ def ranks():
 
     scores_ranked = list(reversed(scores))
 
+    # add a rank Nr to the ordered entries
+    counter = 1
+    for item in scores_ranked:
+        item["rank"] = counter
+        counter += 1
 
-    # generate the user's ranks for Nr of questions correct and score
-    ##
-    ## need to find the users's place in the list, somehow
-    ##
-
-    # temporary stuff till I get the above working
-    rank_nr = 10
-    rank_score = 15
+    # retrieve the user's entry
+    for item in scores_ranked:
+        if item["user_id"] == session["user_id"]:
+            rank_score = item["rank"]
 
     return rank_nr, rank_score
 
-ranks()
+
 
 
 class Questions(object):
@@ -197,7 +211,7 @@ class Questions(object):
 
 def store():
     # stores data of answered question in user's stat DB
-    """ TODO Chris """
+    """ TODO Dido """
 
 def topNR():
     # gives top 10 of users based on questions answered correctly
@@ -212,8 +226,12 @@ def topNR():
         for item in reversed(nr_rank_low):
             nr_rank_10.append(item)
             counter += 1
-    return nr_rank_10
 
+    for item in nr_rank_10:
+        u_id = item["user_id"]
+        item["username"] = db.execute("SELECT username FROM userdata WHERE user_id = :user_id", user_id=u_id)
+
+    return nr_rank_10
 
 def topP():
     # gives top 10 of users based on score
@@ -226,7 +244,8 @@ def topP():
     for item in data:
         score = (item["vragen_goed"] / item["vragen_beantwoord"]) * 100 * item["vragen_goed"]
         u_id = item["user_id"]
-        scores.append({"user_id":u_id, "user_score":score})
+        u_name = db.execute("SELECT username FROM userdata WHERE user_id = :user_id", user_id=u_id)
+        scores.append({"user_id":u_id, "username":u_name,"user_score":score})
 
     # generate highest 10 ranking users based on score
     score_rank_10 = list()
@@ -237,6 +256,8 @@ def topP():
             counter += 1
 
     return score_rank_10
+
+
 
 
 def compare(other_user):
@@ -252,14 +273,46 @@ def compare(other_user):
     # generate a list of dicts, ranked by Nr vragen goed, lowest first
     numbers_ranked = db.execute("SELECT user_id, vragen_goed FROM stats GROUP by vragen_goed")
 
-    # generate the same stuff for other_user as for user under "ranks"
-    ##
-    ##
-    ##
+    # start retrieving other user's rankings
+    other_rank_nr = 0
+    other_rank_score = 0
 
-    # temporary stuff till I get the above working
-    other_rank_nr = 9
-    other_rank_score = 14
+    # generate a list of dicts, ranked by Nr vragen goed, highest first
+    numbers_ranked = list(reversed(db.execute("SELECT user_id, vragen_goed FROM stats GROUP by vragen_goed")))
+
+    # add a rank Nr to the ordered entries
+    counter = 1
+    for item in numbers_ranked:
+        item["rank"] = counter
+        counter += 1
+
+    # retrieve the other user's entry
+    for item in numbers_ranked:
+        if item["user_id"] == other_id:
+            other_rank_nr = item["rank"]
+
+    # gets the score data for all users in a list of dictionaries
+    data = db.execute("SELECT user_id, vragen_goed, vragen_beantwoord FROM stats GROUP by vragen_goed")
+
+    # create a list of id nrs paired with scores
+    scores = list()
+    for item in data:
+        score = (item["vragen_goed"] / item["vragen_beantwoord"]) * 100 * item["vragen_goed"]
+        u_id = item["user_id"]
+        scores.append({"user_id":u_id, "user_score":score})
+
+    scores_ranked = list(reversed(scores))
+
+    # add a rank Nr to the ordered entries
+    counter = 1
+    for item in scores_ranked:
+        item["rank"] = counter
+        counter += 1
+
+    # retrieve the other user's entry
+    for item in scores_ranked:
+        if item["user_id"] == other_id:
+            other_rank_score = item["rank"]
 
     return other_correct, other_score, other_rank_nr, other_rank_score
 

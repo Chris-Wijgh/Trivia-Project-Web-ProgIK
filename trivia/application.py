@@ -204,7 +204,10 @@ def compare_page():
         other_rank_nr = other_rank_nr
         other_rank_score = other_rank_score
 
-        return render_template("compared.html", correct=correct, score=score, rank_nr=rank_nr, rank_score=rank_score, other_correct=other_correct, other_score=other_score, other_rank_nr=other_rank_nr, other_rank_score=other_rank_score)
+        user = {"correct":correct, "score":score, "rank_nr":rank_nr, "rank_score":rank_score}
+        other_user = {"name":other_user, "correct":other_correct, "score":other_score, "rank_nr":other_rank_nr, "rank_score":other_rank_score}
+
+        return render_template("compared.html", user=user, other_user=other_user)
 
     # otherwise give the basic page
     return render_template("compare.html")
