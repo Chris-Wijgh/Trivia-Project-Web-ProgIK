@@ -156,16 +156,6 @@ def questions():
     opentdb_session.getToken()
     dbquestions = opentdb_session.getQuestions(amount=10, use_token=True, category=22)
 
-    # question_dict = {}
-    # for x in dbquestions:
-    #     question_dict['question'] = x['question']
-    #     question_dict['correct_answer'] = x['correct_answer']
-    #     question_dict['incorrect_answers'] = x['incorrect_answers']
-    #     all_answers = x['incorrect_answers']
-    #     all_answers.append(x['correct_answer'])
-    #     question_dict['all_answers'] = all_answers
-
-
     for x in range(9):
         L = dbquestions[x]['incorrect_answers']
         L.append(dbquestions[x]['correct_answer'])
