@@ -191,13 +191,9 @@ class Questions(object):
 
                 # return questions_list
 
-                question_dict = {}
-                for x in questions_from_tdb:
-                    question_dict['question'] = x['question']
-                    question_dict['correct_answer'] = x['correct_answer']
-                    question_dict['incorrect_answers'] = x['incorrect_answers']
 
-                return question_dict
+
+                return questions_from_tdb
     # gives list of lists of questions from external DB
 
 

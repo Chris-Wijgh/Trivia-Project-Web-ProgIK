@@ -93,7 +93,7 @@ def register():
         elif not request.form.get("password"):
             return apology("must provide password")
 
-        # ensure password confirmation was submitted
+        #ensure password confirmation was submitted
         elif not request.form.get("confirmation"):
             return apology("must provide password confirmation")
 
@@ -115,7 +115,7 @@ def register():
             return apology("invalid username and/or password")
 
         # remember which user has logged in
-        session["user_id"] = rows[0]["id"]
+        session["user_id"] = rows[0]["user_id"]
 
         # redirect user to home page
         return redirect(url_for("index"))
@@ -154,9 +154,24 @@ def questions():
     ''' user gets trivia questions to answer '''
     opentdb_session = Questions()
     opentdb_session.getToken()
-    question_dict = opentdb_session.getQuestions(amount=10, use_token=True, category=22)
+    dbquestions = opentdb_session.getQuestions(amount=10, use_token=True, category=22)
 
-    return render_template("questions.html", question_dict=question_dict)
+    # question_dict = {}
+    # for x in dbquestions:
+    #     question_dict['question'] = x['question']
+    #     question_dict['correct_answer'] = x['correct_answer']
+    #     question_dict['incorrect_answers'] = x['incorrect_answers']
+    #     all_answers = x['incorrect_answers']
+    #     all_answers.append(x['correct_answer'])
+    #     question_dict['all_answers'] = all_answers
+
+
+    for x in range(9):
+        L = dbquestions[x]['incorrect_answers']
+        L.append(dbquestions[x]['correct_answer'])
+        dbquestions[x]['all_answers'] = L
+
+    return render_template("questions.html", dbquestions=dbquestions)
 
 
 # result

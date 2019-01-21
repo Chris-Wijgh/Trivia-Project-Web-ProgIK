@@ -5,27 +5,19 @@
 {% endblock %}
 
 {% block main %}
-    <form action="{{ url_for('register') }}" method="post">
-        <table class="table table-bordered">
-            <thead>
-                <th>Question</th>
-                <th>Answers</th>
-            </thead>
-            <tbody>
-                {% for x in question_dict %}
-                <tr>
-                    <td>{{ x['question'] }}</td>
-                    <td>{{ x['all_answers'] }}</td>
 
-                </tr>
+    <form action='/questions' method='POST'>
+        {% for i in range(9) %}
+          <li>
+            <h2>{{ dbquestions[i]['question'] }} </h2>
+            <!--  New ul with class of 'courses' -->
+            <ul class='all_answers'>
+                {% for x in dbquestions[i]['all_answers'] %}
+                    <input type='radio' value='{{x}}' name='{{i}}' />{{x}}
                 {% endfor %}
-                <!--<tr>-->
-                <!--    <td></td>-->
-                <!--    <td></td>-->
-                <!--    <td>Remaining Balance:</td>-->
-                <!--    <td>{{ available_cash}}</td>-->
-                <!--</tr>-->
-            </tbody>
-        </table>
-    </form>
+            </ul>
+         </li>
+        {% endfor %}
+        <input type="submit" value="submit" />
+    </form
 {% endblock %}
