@@ -255,5 +255,8 @@ class Questions(object):
 
 
 # def result():
-#     # checks answers + provides correct answer
-#     """ TODO Dido """
+#     correct = 0
+#     for i in dbquestions:
+#         answered = request.form[i]
+#     if dbquestions[i][0] == answered:
+#         correct = correct+1
