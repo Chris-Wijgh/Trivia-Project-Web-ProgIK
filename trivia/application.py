@@ -136,14 +136,14 @@ def index():
 
      ''' generate user stats '''
 
-     stats()
-     correct = correct
-     score = score
+     statistics = stats()
+     correct = statistics[0]
+     score = statistics[1]
 
      # generate user ranking in all lists
-     ranks()
-     rank_nr = rank_nr
-     rank_score = rank_score
+     rankings = ranks()
+     rank_nr = rankings[0]
+     rank_score = rankings[1]
 
      return render_template("index.html", correct=correct, score=score, rank_nr=rank_nr, rank_score=rank_score)
 

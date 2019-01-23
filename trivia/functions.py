@@ -69,12 +69,17 @@ def L(f):
 
 
 def stats():
-     numbers = db.execute("SELECT * FROM stats WHERE user_id = :user_id", user_id=session["user_id"])
-     questions_nr = numbers[0]['vragen_beantwoord']
-     correct = numbers[0]['vragen_goed']
-     score = (correct / questions_nr) * 100 * correct
+    numbers = db.execute("SELECT * FROM stats WHERE user_id = :user_id", user_id=session["user_id"])
+    questions_nr = numbers[0]['vragen_beantwoord']
+    correct = numbers[0]['vragen_goed']
 
-     return correct, score
+    if correct==0 or questions_nr ==0:
+        score = 0
+
+    else:
+        score = (correct / questions_nr) * 100 * correct
+
+    return correct, score
 
 def ranks():
     rank_nr = 0
@@ -99,7 +104,12 @@ def ranks():
      # create a list of id nrs paired with scores
     scores = list()
     for item in data:
-        score = (item["vragen_goed"] / item["vragen_beantwoord"]) * 100 * item["vragen_goed"]
+        if item["vragen_goed"]==0 or item["vragen_beantwoord"] ==0:
+            score=0
+
+        else:
+            score = (item["vragen_goed"] / item["vragen_beantwoord"]) * 100 * item["vragen_goed"]
+
         u_id = item["user_id"]
         scores.append({"user_id":u_id, "user_score":score})
 
