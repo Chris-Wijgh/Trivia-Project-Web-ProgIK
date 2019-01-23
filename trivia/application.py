@@ -190,13 +190,16 @@ def result():
         if correct_answers[i]['correct_answer'] == answered:
             correct = correct+1
 
-    beantwoord = db.execute("SELECT vragen_beantwoord FROM stats WHERE user_id=:user_id", user_id=session["user_id"])
-    goed = db.execute("SELECT vragen_goed FROM stats WHERE user_id=:user_id", user_id=session["user_id"])
+    beantwoord_raw = db.execute("SELECT vragen_beantwoord FROM stats WHERE user_id=:user_id", user_id=session["user_id"])
+    beantwoord = beantwoord_raw[0]['vragen_beantwoord']
+
+    goed_raw = db.execute("SELECT vragen_goed FROM stats WHERE user_id=:user_id", user_id=session["user_id"])
+    goed = goed_raw[0]['vragen_goed']
 
     beantwoord = beantwoord + 10
     goed = goed + correct
 
-    db.execute("UPDATE stats SET vragen_beantwoord, vragen_goed", vragen_beantwoord= beantwoord, vragen_goed=correct)
+    db.execute("UPDATE stats SET vragen_beantwoord = :beantwoord, vragen_goed = :correct WHERE user_id = :user_id", beantwoord = beantwoord, correct = correct, user_id=session["user_id"])
 
     # remove the data from the database
     db.execute("DELETE FROM questions")
@@ -209,80 +212,88 @@ def result():
 # Top 10
 @app.route("/top10", methods=["GET"])
 @L
-def ab():
-    return apology('t')
+def top10():
 
+    top10_lijst = topNR()
 
-
+    return render_template('top_10.html', top10_lijst=top10_lijst)
 
 # compare
 @app.route("/compare", methods=["GET", "POST"])
 @L
 def compare_page():
 
-     ''' get and present the info after the user asks for it '''
+    ''' get and present the info after the user asks for it '''
 
-     if request.method == "POST":
+    if request.method == "POST":
 
-         # get the user's stats and ranks
-         stats()
-         correct = correct
-         score = score
+        # get the user's stats and ranks
+        statistics = stats()
+        correct = statistics[0]
+        score = statistics[1]
 
-         ranks()
-         rank_nr = rank_nr
-         rank_score = rank_score
+        # generate user ranking in all lists
+        rankings = ranks()
+        rank_nr = rankings[0]
+        rank_score = rankings[1]
 
 
-         # get the other user's stats and ranks
-         other_user = request.form.get("other_user_name")
-         compare(other_user)
+        # get the other user's stats and ranks
+        other_user = request.form.get("other_user_name")
+        other_user_stats = compare(other_user)
 
-         user = {"correct":correct, "score":score, "rank_nr":rank_nr, "rank_score":rank_score}
-         other_user = {"name":other_user, "correct":other_correct, "score":other_score, "rank_nr":other_rank_nr, "rank_score":other_rank_score}
+        other_correct = other_user_stats[0]
+        other_score = other_user_stats[1]
+        other_rank_nr = other_user_stats[2]
+        other_rank_score = other_user_stats[3]
 
-         return render_template("compared.html", user=user, other_user=other_user)
+        user = {"correct":correct, "score":score, "rank_nr":rank_nr, "rank_score":rank_score}
+        other_user = {"name":other_user, "correct":other_correct, "score":other_score, "rank_nr":other_rank_nr, "rank_score":other_rank_score}
 
-         return render_template("compared.html", correct=correct, score=score, rank_nr=rank_nr, rank_score=rank_score, other_correct=other_correct, other_score=other_score, other_rank_nr=other_rank_nr, other_rank_score=other_rank_score)
+        return render_template("compared.html", user=user, other_user=other_user)
 
+        return render_template("compared.html", correct=correct, score=score, rank_nr=rank_nr, rank_score=rank_score, other_correct=other_correct, other_score=other_score, other_rank_nr=other_rank_nr, other_rank_score=other_rank_score)
+
+    else:
      # otherwise give the basic page
-     return render_template("compare.html")
-
-def b():
-    return apology('t')
+        return render_template("compare.html")
 
 # compared
 @app.route("/compared", methods=["GET", "POST"])
 @L
 def compared():
 
-     ''' get and present more info if the user asks for it '''
+    ''' get and present more info if the user asks for it '''
 
-     if request.method == "POST":
+    if request.method == "POST":
 
-         # get the user's stats and ranks
-         stats()
-         correct = correct
-         score = score
+        # get the user's stats and ranks
+        statistics = stats()
+        correct = statistics[0]
+        score = statistics[1]
 
-         ranks()
-         rank_nr = rank_nr
-         rank_score = rank_score
+        # generate user ranking in all lists
+        rankings = ranks()
+        rank_nr = rankings[0]
+        rank_score = rankings[1]
 
 
-         # get the other user's stats and ranks
-         other_user = request.form.get("other_user_name")
-         compare(other_user)
+        # get the other user's stats and ranks
+        other_user = request.form.get("other_user_name")
+        other_user_stats = compare(other_user)
 
-         other_correct = other_correct
-         other_score = other_score
-         other_rank_nr = other_rank_nr
-         other_rank_score = other_rank_score
+        other_correct = other_user_stats[0]
+        other_score = other_user_stats[1]
+        other_rank_nr = other_user_stats[2]
+        other_rank_score = other_user_stats[3]
 
-         return render_template("compared.html", correct=correct, score=score, rank_nr=rank_nr, rank_score=rank_score, other_correct=other_correct, other_score=other_score, other_rank_nr=other_rank_nr, other_rank_score=other_rank_score)
+        user = {"correct":correct, "score":score, "rank_nr":rank_nr, "rank_score":rank_score}
+        other_user = {"name":other_user, "correct":other_correct, "score":other_score, "rank_nr":other_rank_nr, "rank_score":other_rank_score}
 
-     # otherwise give the basic page if the user somehow lands here without being sent by "compare"
-     return render_template("compared.html")
+        return render_template("compared.html", user=user, other_user=other_user)
 
-def c():
-    return apology('t')
+        return render_template("compared.html", correct=correct, score=score, rank_nr=rank_nr, rank_score=rank_score, other_correct=other_correct, other_score=other_score, other_rank_nr=other_rank_nr, other_rank_score=other_rank_score)
+
+    else:
+        # otherwise give the basic page
+        return render_template("compare.html")

@@ -253,7 +253,12 @@ def compare(other_user):
     numbers = db.execute("SELECT * FROM stats WHERE user_id = :user_id", user_id=other_id)
     questions_nr = numbers[0]['vragen_beantwoord']
     other_correct = numbers[0]['vragen_goed']
-    other_score = (other_correct / questions_nr) * 100 * other_correct
+
+    if questions_nr == 0 or other_correct == 0:
+        other_score = 0
+
+    else:
+        other_score = (other_correct / questions_nr) * 100 * other_correct
 
     # generate a list of dicts, ranked by Nr vragen goed, lowest first
     numbers_ranked = db.execute("SELECT user_id, vragen_goed FROM stats GROUP by vragen_goed")
@@ -283,7 +288,12 @@ def compare(other_user):
     # create a list of id nrs paired with scores
     scores = list()
     for item in data:
-        score = (item["vragen_goed"] / item["vragen_beantwoord"]) * 100 * item["vragen_goed"]
+        if item["vragen_goed"] == 0 or item["vragen_beantwoord"] == 0:
+            score = 0
+
+        else:
+            score = (item["vragen_goed"] / item["vragen_beantwoord"]) * 100 * item["vragen_goed"]
+
         u_id = item["user_id"]
         scores.append({"user_id":u_id, "user_score":score})
 
