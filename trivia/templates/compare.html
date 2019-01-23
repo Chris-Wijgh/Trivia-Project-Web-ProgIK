@@ -1,0 +1,25 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Home
+{% endblock %}
+
+{% block main %}
+    <form action="{{ url_for('register') }}" method="post">
+        <table class="table table-bordered">
+            <thead>
+                <th>Aantal vragen goed</th>
+                <th>Superscore C</th>
+            </thead>
+            <tbody>
+                {% for x in question_dict %}
+                <tr>
+                    <td>{{ x['question'] }}</td>
+                    <td>{{ x['all_answers'] }}</td>
+
+                </tr>
+                {% endfor %}
+
+            </tbody>
+        </table>
+    </form>
