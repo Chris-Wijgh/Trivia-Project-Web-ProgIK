@@ -44,3 +44,8 @@ main td
     /* left-align tables' cells */
     text-align: left;
 }
+
+body
+    {
+        background-color: blue;
+    }
