@@ -1,2 +1,11 @@
-<a href="{{ url_for('questions') }}">Geef mij 10 vragen!</a>
+{% extends "layout.html" %}
+
+{% block title %}
+    End
+{% endblock %}
+
+{% block main %}
+<a href="{{ url_for('index') }}">Terug naar index!</a>
 <h1>Correct Answers: <u>{{ correct }}</u></h1>
+
+{% endblock %}
