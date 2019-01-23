@@ -93,7 +93,7 @@ def register():
         elif not request.form.get("password"):
             return apology("must provide password")
 
-        # ensure password confirmation was submitted
+        #ensure password confirmation was submitted
         elif not request.form.get("confirmation"):
             return apology("must provide password confirmation")
 
@@ -115,7 +115,7 @@ def register():
             return apology("invalid username and/or password")
 
         # remember which user has logged in
-        session["user_id"] = rows[0]["id"]
+        session["user_id"] = rows[0]["user_id"]
 
         # redirect user to home page
         return redirect(url_for("index"))
@@ -152,23 +152,49 @@ def index():
 def questions():
 
     ''' user gets trivia questions to answer '''
+
+    # get questions from API
     opentdb_session = Questions()
     opentdb_session.getToken()
-    question_dict = opentdb_session.getQuestions(amount=10, use_token=True, category=22)
+    dbquestions = opentdb_session.getQuestions(amount=10, use_token=True, category=22)
 
-    return render_template("questions.html", question_dict=question_dict)
+    # add element in dict for all answers
+    for x in range(10):
+        L = dbquestions[x]['incorrect_answers']
+        L.append(dbquestions[x]['correct_answer'])
+        dbquestions[x]['all_answers'] = L
+
+    # insert the questions into database
+    for i in range(10):
+        db.execute("INSERT INTO questions (category, type, difficulty, question, correct_answer) VALUES (:category, :type, :difficulty, :question, :correct_answer)", category=dbquestions[i]['category'].strip(), type=dbquestions[i]['type'].strip(), difficulty=dbquestions[i]['difficulty'].strip(), question=dbquestions[i]['question'].strip(), correct_answer=dbquestions[i]['correct_answer'].strip())
+
+    return render_template("questions.html", dbquestions=dbquestions)
 
 
 # result
-@app.route("/result", methods=["GET"])
+@app.route("/result", methods=["GET", "POST"])
 @L
 def result():
 
-    ''' user gets right/wrong + correct answers, stores score stats in user-stats DB '''
+    # select the correct answers from the db
+    correct_answers=db.execute("SELECT question, correct_answer FROM questions")
 
-    return apology('something went wrong')
+    correct = 0
+    form = request.form
+
+    # compare the answers
+    for i in range(len(form)):
+        answered = form[str(i)]
+        print(answered)
+        if correct_answers[i]['correct_answer'] == answered:
+            correct = correct+1
+
+    # remove the data from the database
+    db.execute("DELETE FROM questions")
 
 
+    # return the number of correct answers
+    return render_template('end.html', correct=correct)
 
 
 # Top 10

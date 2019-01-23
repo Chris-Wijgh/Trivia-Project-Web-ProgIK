@@ -179,25 +179,8 @@ class Questions(object):
                 response = self.__apiRequest(url, params)
                 questions_from_tdb = response['results']
                 unescape = HTMLParser().unescape
-                # questions_list = []
-                # for question_dict in questions_from_tdb:
-                #     category = unescape(question_dict['category'])
-                #     type = question_dict['type']
-                #     difficulty = question_dict['difficulty']
-                #     question = unescape(question_dict['question'])
-                #     correct_answer = unescape(question_dict['correct_answer'])
-                #     incorrect_answers = unescape(question_dict['incorrect_answers'])
-                #     questions_list.extend((category, type, difficulty, question, correct_answer, incorrect_answers))
 
-                # return questions_list
-
-                question_dict = {}
-                for x in questions_from_tdb:
-                    question_dict['question'] = x['question']
-                    question_dict['correct_answer'] = x['correct_answer']
-                    question_dict['incorrect_answers'] = x['incorrect_answers']
-
-                return question_dict
+                return questions_from_tdb
     # gives list of lists of questions from external DB
 
 
@@ -272,5 +255,8 @@ class Questions(object):
 
 
 # def result():
-#     # checks answers + provides correct answer
-#     """ TODO Dido """
+#     correct = 0
+#     for i in dbquestions:
+#         answered = request.form[i]
+#     if dbquestions[i][0] == answered:
+#         correct = correct+1
