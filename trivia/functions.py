@@ -97,13 +97,13 @@ def ranks():
     data = db.execute("SELECT user_id, vragen_goed, vragen_beantwoord FROM stats GROUP by vragen_goed")
 
      # create a list of id nrs paired with scores
-     scores = list()
-     for item in data:
-         score = (item["vragen_goed"] / item["vragen_beantwoord"]) * 100 * item["vragen_goed"]
-         u_id = item["user_id"]
-         scores.append({"user_id":u_id, "user_score":score})
+    scores = list()
+    for item in data:
+        score = (item["vragen_goed"] / item["vragen_beantwoord"]) * 100 * item["vragen_goed"]
+        u_id = item["user_id"]
+        scores.append({"user_id":u_id, "user_score":score})
 
-     scores_ranked = list(reversed(scores))
+    scores_ranked = list(reversed(scores))
 
     # add a rank Nr to the ordered entries
     counter = 1
@@ -195,43 +195,43 @@ def topNR():
      # gives inverse ranking of users based on questions correct
      nr_rank_low = db.execute("SELECT user_id, vragen_goed FROM stats GROUP by vragen_goed")
 
-    # generate highest 10 ranking users based on questions correct
-    nr_rank_10 = list()
-    counter = 0
-    if counter < 10:
-        for item in reversed(nr_rank_low):
-            nr_rank_10.append(item)
-            counter += 1
+     # generate highest 10 ranking users based on questions correct
+     nr_rank_10 = list()
+     counter = 0
+     if counter < 10:
+         for item in reversed(nr_rank_low):
+             nr_rank_10.append(item)
+             counter += 1
 
-    for item in nr_rank_10:
-        u_id = item["user_id"]
-        item["username"] = db.execute("SELECT username FROM userdata WHERE user_id = :user_id", user_id=u_id)
+     for item in nr_rank_10:
+         u_id = item["user_id"]
+         item["username"] = db.execute("SELECT username FROM userdata WHERE user_id = :user_id", user_id=u_id)
 
-    return nr_rank_10
+     return nr_rank_10
 
- def topP():
+def topP():
      # gives top 10 of users based on score
 
      # gets the relevant data for all users in a list of dictionaries
      data = db.execute("SELECT user_id, vragen_goed, vragen_beantwoord FROM stats GROUP by vragen_goed")
 
-    # create a list of id nrs paired with scores
-    scores = list()
-    for item in data:
-        score = (item["vragen_goed"] / item["vragen_beantwoord"]) * 100 * item["vragen_goed"]
-        u_id = item["user_id"]
-        u_name = db.execute("SELECT username FROM userdata WHERE user_id = :user_id", user_id=u_id)
-        scores.append({"user_id":u_id, "username":u_name,"user_score":score})
+     # create a list of id nrs paired with scores
+     scores = list()
+     for item in data:
+         score = (item["vragen_goed"] / item["vragen_beantwoord"]) * 100 * item["vragen_goed"]
+         u_id = item["user_id"]
+         u_name = db.execute("SELECT username FROM userdata WHERE user_id = :user_id", user_id=u_id)
+         scores.append({"user_id":u_id, "username":u_name,"user_score":score})
 
     # generate highest 10 ranking users based on score
-    score_rank_10 = list()
-    counter = 0
-    if counter < 10:
-        for item in reversed(scores):
+     score_rank_10 = list()
+     counter = 0
+     if counter < 10:
+         for item in reversed(scores):
             score_rank_10.append(item)
             counter += 1
 
-    return score_rank_10
+     return score_rank_10
 
 
 

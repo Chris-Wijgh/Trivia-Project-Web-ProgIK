@@ -104,6 +104,8 @@ def register():
         # insert new user data into database
         insert = db.execute("INSERT INTO userdata (username, password) VALUES (:username, :password)", username=request.form.get("username") , password=pwd_context.hash(request.form.get("password")))
 
+
+
         if not insert:
             return apology("Username already exists")
 
@@ -116,6 +118,8 @@ def register():
 
         # remember which user has logged in
         session["user_id"] = rows[0]["user_id"]
+
+        insert_stats = db.execute("INSERT INTO stats (user_id) VALUES (:user_id)", user_id=session["user_id"])
 
         # redirect user to home page
         return redirect(url_for("index"))
@@ -142,9 +146,6 @@ def index():
      rank_score = rank_score
 
      return render_template("index.html", correct=correct, score=score, rank_nr=rank_nr, rank_score=rank_score)
-
-def index():
-    return render_template("index.html")
 
 # questions
 @app.route("/questions", methods=["GET", "POST"])
@@ -188,6 +189,14 @@ def result():
         print(answered)
         if correct_answers[i]['correct_answer'] == answered:
             correct = correct+1
+
+    beantwoord = db.execute("SELECT vragen_beantwoord FROM stats WHERE user_id=:user_id", user_id=session["user_id"])
+    goed = db.execute("SELECT vragen_goed FROM stats WHERE user_id=:user_id", user_id=session["user_id"])
+
+    beantwoord = beantwoord + 10
+    goed = goed + correct
+
+    db.execute("UPDATE stats SET vragen_beantwoord, vragen_goed", vragen_beantwoord= beantwoord, vragen_goed=correct)
 
     # remove the data from the database
     db.execute("DELETE FROM questions")
@@ -241,7 +250,7 @@ def compare_page():
 
 def b():
     return apology('t')
-    
+
 # compared
 @app.route("/compared", methods=["GET", "POST"])
 @L
@@ -274,6 +283,6 @@ def compared():
 
      # otherwise give the basic page if the user somehow lands here without being sent by "compare"
      return render_template("compared.html")
-     
+
 def c():
     return apology('t')
