@@ -1,15 +1,15 @@
 {% extends "layout.html" %}
 
 {% block title %}
-    Questions
+    Home
 {% endblock %}
 
 {% block main %}
     <form action="{{ url_for('register') }}" method="post">
         <table class="table table-bordered">
             <thead>
-                <th>Question</th>
-                <th>Answers</th>
+                <th>Aantal vragen goed</th>
+                <th>Superscore C</th>
             </thead>
             <tbody>
                 {% for x in question_dict %}
@@ -19,13 +19,7 @@
 
                 </tr>
                 {% endfor %}
-                <!--<tr>-->
-                <!--    <td></td>-->
-                <!--    <td></td>-->
-                <!--    <td>Remaining Balance:</td>-->
-                <!--    <td>{{ available_cash}}</td>-->
-                <!--</tr>-->
+
             </tbody>
         </table>
     </form>
-{% endblock %}

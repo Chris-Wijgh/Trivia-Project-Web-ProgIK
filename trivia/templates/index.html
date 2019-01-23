@@ -5,6 +5,38 @@
 {% endblock %}
 
 {% block main %}
-   <a href="{{ url_for('questions') }}">Geef mij 10 vragen!</a></li>
+<div class="row">
+   <div class="column">
+   <a href="{{ url_for('questions') }}">Geef mij 10 vragen!</a>
+   </div>
+
+   <div class="column">
+   <form action="{{ url_for('register') }}" method="post">
+        <table class="table table-bordered">
+            <thead>
+                <th>Aantal vragen goed</th>
+                <th>Superscore C</th>
+            </thead>
+            <tbody>
+                {% for x in question_dict %}
+                <tr>
+                    <td>{{ x['question'] }}</td>
+                    <td>{{ x['all_answers'] }}</td>
+
+                </tr>
+                {% endfor %}
+
+            </tbody>
+         </table>
+    </form>
+    </div>
+<div class="column">
+<div class="form-group">
+                <input class="form-control" name="username" placeholder="Search Username" type="text"/>
+            </div>
+            <div class="form-group">
+                <button class="btn btn-default" type="submit">Compare!</button>
+            </div></div>
+
 {% endblock %}
 
