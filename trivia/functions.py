@@ -29,10 +29,10 @@ def loginF():
             return apology("must provide password")
 
         # query database for username
-        rows = db.execute("SELECT * FROM users WHERE username = :username", username=request.form.get("username"))
+        rows = db.execute("SELECT * FROM userdata WHERE username = :username", username=request.form.get("username"))
 
         # ensure username exists and password is correct
-        if len(rows) != 1 or not pwd_context.verify(request.form.get("password"), rows[0]["hash"]):
+        if len(rows) != 1 or not pwd_context.verify(request.form.get("password"), rows[0]["password"]):
             return apology("invalid username and/or password")
 
         return True
@@ -53,12 +53,6 @@ def apology(message, code=400):
         return s
     return render_template("apology.html", top=code, bottom=escape(message)), code
 
-
-# def register():
-    # registration and login function
-    #""" TODO Chris """
-
-
 def L(f):
     # check if user is logged in
     """
@@ -75,13 +69,12 @@ def L(f):
 
 
 def stats():
-    numbers = db.execute("SELECT * FROM stats WHERE user_id = :user_id", user_id=session["user_id"])
-    questions_nr = numbers[0]['vragen_beantwoord']
-    correct = numbers[0]['vragen_goed']
-    score = (correct / questions_nr) * 100 * correct
+     numbers = db.execute("SELECT * FROM stats WHERE user_id = :user_id", user_id=session["user_id"])
+     questions_nr = numbers[0]['vragen_beantwoord']
+     correct = numbers[0]['vragen_goed']
+     score = (correct / questions_nr) * 100 * correct
 
-    return correct, score
-
+     return correct, score
 
 def ranks():
     rank_nr = 0
@@ -103,14 +96,14 @@ def ranks():
     # gets the score data for all users in a list of dictionaries
     data = db.execute("SELECT user_id, vragen_goed, vragen_beantwoord FROM stats GROUP by vragen_goed")
 
-    # create a list of id nrs paired with scores
-    scores = list()
-    for item in data:
-        score = (item["vragen_goed"] / item["vragen_beantwoord"]) * 100 * item["vragen_goed"]
-        u_id = item["user_id"]
-        scores.append({"user_id":u_id, "user_score":score})
+     # create a list of id nrs paired with scores
+     scores = list()
+     for item in data:
+         score = (item["vragen_goed"] / item["vragen_beantwoord"]) * 100 * item["vragen_goed"]
+         u_id = item["user_id"]
+         scores.append({"user_id":u_id, "user_score":score})
 
-    scores_ranked = list(reversed(scores))
+     scores_ranked = list(reversed(scores))
 
     # add a rank Nr to the ordered entries
     counter = 1
@@ -118,14 +111,13 @@ def ranks():
         item["rank"] = counter
         counter += 1
 
+
     # retrieve the user's entry
     for item in scores_ranked:
         if item["user_id"] == session["user_id"]:
             rank_score = item["rank"]
 
     return rank_nr, rank_score
-
-
 
 
 class Questions(object):
@@ -193,31 +185,15 @@ class Questions(object):
                 response = self.__apiRequest(url, params)
                 questions_from_tdb = response['results']
                 unescape = HTMLParser().unescape
-                questions_list = []
-                for question_dict in questions_from_tdb:
-                    category = unescape(question_dict['category'])
-                    type = question_dict['type']
-                    difficulty = question_dict['difficulty']
-                    question = unescape(question_dict['question'])
-                    correct_answer = unescape(question_dict['correct_answer'])
-                    incorrect_answers = unescape(question_dict['incorrect_answers'])
-                    questions_list.extend((category, type, difficulty, question, correct_answer, incorrect_answers))
 
-
-
-                return questions_list
+                return questions_from_tdb
     # gives list of lists of questions from external DB
 
-
-def store():
-    # stores data of answered question in user's stat DB
-    """ TODO Dido """
-
 def topNR():
-    # gives top 10 of users based on questions answered correctly
+     # gives top 10 of users based on questions answered correctly
 
-    # gives inverse ranking of users based on questions correct
-    nr_rank_low = db.execute("SELECT user_id, vragen_goed FROM stats GROUP by vragen_goed")
+     # gives inverse ranking of users based on questions correct
+     nr_rank_low = db.execute("SELECT user_id, vragen_goed FROM stats GROUP by vragen_goed")
 
     # generate highest 10 ranking users based on questions correct
     nr_rank_10 = list()
@@ -233,11 +209,11 @@ def topNR():
 
     return nr_rank_10
 
-def topP():
-    # gives top 10 of users based on score
+ def topP():
+     # gives top 10 of users based on score
 
-    # gets the relevant data for all users in a list of dictionaries
-    data = db.execute("SELECT user_id, vragen_goed, vragen_beantwoord FROM stats GROUP by vragen_goed")
+     # gets the relevant data for all users in a list of dictionaries
+     data = db.execute("SELECT user_id, vragen_goed, vragen_beantwoord FROM stats GROUP by vragen_goed")
 
     # create a list of id nrs paired with scores
     scores = list()
@@ -259,7 +235,6 @@ def topP():
 
 
 
-
 def compare(other_user):
     # search for other user's ID based on user name
     other_id = db.execute("SELECT user_id FROM userdata WHERE username = :username", username=other_user)
@@ -272,6 +247,7 @@ def compare(other_user):
 
     # generate a list of dicts, ranked by Nr vragen goed, lowest first
     numbers_ranked = db.execute("SELECT user_id, vragen_goed FROM stats GROUP by vragen_goed")
+
 
     # start retrieving other user's rankings
     other_rank_nr = 0
@@ -316,8 +292,3 @@ def compare(other_user):
 
     return other_correct, other_score, other_rank_nr, other_rank_score
 
-
-
-# def result():
-#     # checks answers + provides correct answer
-#     """ TODO Dido """
