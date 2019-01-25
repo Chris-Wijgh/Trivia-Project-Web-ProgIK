@@ -244,11 +244,7 @@ def topP():
          for item in reversed(scores):
             score_rank_10.append(item)
             counter += 1
-     print(score_rank_10)
      return score_rank_10
-topP()
-
-
 
 def compare(other_user):
     # search for other user's ID based on user name
