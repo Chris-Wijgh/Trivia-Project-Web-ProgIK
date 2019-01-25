@@ -1,13 +1,37 @@
 {% extends "layout.html" %}
 
 {% block title %}
-    Home
+    Vergelijk jezelf!
 {% endblock %}
 
 {% block main %}
-<form>
-    Other user:<br>
-     <input type="text" name="other_user_name"><br>
-</form>
+<div class="row">
+   <div class="column">
+   <br> <a href="{{ url_for('questions') }}">Geef mij 10 vragen!</a> </br>
+   <a href="{{ url_for('index') }}">Ga terug naar index!</a>
+   </div>
+
+   <div class="column">
+        <table class="table table-bordered">
+            <thead>
+                <th>Jij hebt goed</th>
+                <th>Jouw Superscore C is</th>
+                <th>Zij/hij heeft goed</th>
+                <th>Zijn/haar Superscore C is</th>
+            </thead>
+            <tbody>
+
+                <tr>
+                    <td>{{ correct }} ({{rank_nr}}e)</td>
+                    <td>{{ score }} ({{rank_score}}e)</td>
+                    <td>{{ other_correct }} ({{other_rank_nr}}e)</td>
+                    <td>{{ other_score }} ({{other_rank_score}}e)</td>
+
+                </tr>
+
+
+            </tbody>
+         </table>
+    </div>
 
 {% endblock %}
