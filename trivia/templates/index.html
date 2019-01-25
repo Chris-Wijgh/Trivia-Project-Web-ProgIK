@@ -11,7 +11,7 @@
    </div>
 
    <div class="column">
-   <form action="{{ url_for('register') }}" method="post">
+  <!-- <form action="{{ url_for('register') }}" method="post"> -->
         <table class="table table-bordered">
             <thead>
                 <th>Aantal vragen goed</th>
@@ -30,9 +30,10 @@
 
             </tbody>
          </table>
-    </form>
+    <!--</form> -->
     </div>
 <div class="column">
+<form action="{{ url_for('compare_page') }}" method="GET">
 <div class="form-group">
                 <input class="form-control" name="username" placeholder="Search Username" type="text"/>
             </div>
