@@ -4,7 +4,7 @@ from flask_session import Session
 from passlib.apps import custom_app_context as pwd_context
 from tempfile import mkdtemp
 
-from functions import *
+from functions import loginF, apology, L, stats, ranks, Questions, topNR, topP, compare
 
 # configure application
 app = Flask(__name__)
