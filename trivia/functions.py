@@ -4,11 +4,11 @@ from passlib.apps import custom_app_context as pwd_context
 import csv
 import urllib.request
 import requests
-
+import html
 
 from flask import redirect, render_template, request, session
 from functools import wraps
-from html.parser import HTMLParser
+
 
 db = SQL("sqlite:///trivia.db")
 
@@ -194,7 +194,16 @@ class Questions(object):
                     params['token'] = self.__API_TOKEN
                 response = self.__apiRequest(url, params)
                 questions_from_tdb = response['results']
-                unescape = HTMLParser().unescape
+
+                # html parsing
+                for x in range(len(questions_from_tdb)):
+                    questions_from_tdb[x]['category'] = html.unescape(questions_from_tdb[x]['category'])
+                    questions_from_tdb[x]['type'] = html.unescape(questions_from_tdb[x]['type'])
+                    questions_from_tdb[x]['difficulty'] = html.unescape(questions_from_tdb[x]['difficulty'])
+                    questions_from_tdb[x]['question'] = html.unescape(questions_from_tdb[x]['question'])
+                    questions_from_tdb[x]['correct_answers'] = html.unescape(questions_from_tdb[x]['correct_answers'])
+                    for i in range(len(questions_from_tdb[x]['incorrect_answers'])):
+                        questions_from_tdb[x]['incorrect_answers'][i] =  html.unescape(questions_from_tdb[x]['incorrect_answers'][i])
 
                 return questions_from_tdb
     # gives list of lists of questions from external DB
