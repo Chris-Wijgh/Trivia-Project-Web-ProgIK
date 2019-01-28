@@ -14,12 +14,14 @@
             </thead>
             <tbody>
                 <tr>
-                    <td>{{ top10_lijst }}</td>
-                    <td>{{ test }}</td>
+                    <td>1e {{ top10_lijst[0]["username"] }}  {{ top10_lijst[0]["vragen_goed"] }}</td>
+                    <td>1e {{ top10_score[0]["username"] }}  {{ top10_score[0]["user_score"] }} </td>
 
                 </tr>
-
-
+                <tr>
+                    <td> 2e {{ top10_lijst[1]["username"] }} {{ top10_lijst[1]["vragen_goed"] }}</td>
+                    <td> 2e {{ top10_score[1]["username"] }} {{ top10_score[1]["user_score"] }}</td>
+                </tr>
             </tbody>
         </table>
     </form>

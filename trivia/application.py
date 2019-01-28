@@ -217,8 +217,9 @@ def result():
 def top10():
 
     top10_lijst = topNR()
+    top10_score = topP()
 
-    return render_template('top_10.html', top10_lijst=top10_lijst)
+    return render_template('top_10.html', top10_lijst=top10_lijst, top10_score=top10_score)
 
 
 # comparing
