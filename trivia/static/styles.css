@@ -1,7 +1,13 @@
 body
 {
     background-color: CornSilk;
+    background-image:  url(map1.png);
+    background-repeat: no-repeat;
+    background-size: 500px, 200px;
+    background-attachment: fixed;
+    background-position: bottom center;
     text-align: center;
+
 }
 
 main .form-control
