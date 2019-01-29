@@ -8,7 +8,7 @@
 <link rel="stylesheet" type="text/css" href="./static/styles.css" />
 <div class="row">
    <div class="column">
-   <br> <a href="{{ url_for('questions') }}" class="btn btn-default">Geef mij 10 vragen!</a> </br>
+   <a href="{{ url_for('questions') }}" class="btn btn-default">Geef mij 10 vragen!</a>
    <a href="{{ url_for('index') }}" class="btn btn-default">Ga terug naar index!</a>
    </div>
 
@@ -23,10 +23,10 @@
             <tbody>
 
                 <tr>
-                    <td>{{ stats }} ({{rank_nr}}e)</td>
-                    <td>{{ score }} ({{rank_score}}e)</td>
-                    <td>{{ other_correct }} ({{other_rank_nr}}e)</td>
-                    <td>{{ other_score }} ({{other_rank_score}}e)</td>
+                <td>{{ data[0]["correct"] }} ({{data[0]["rank_nr"]}}e plaats)</td>
+                <td>{{ data[0]["score"] }} ({{data[0]["rank_score"]}}e plaats)</td>
+                <td>{{ data[1]["correct"]}} ({{data[1]["rank_nr"]}}e plaats)</td>
+                <td>{{ data[1]["score"] }} ({{data[1]["rank_score"]}}e plaats)</td>
 
                 </tr>
 

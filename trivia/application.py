@@ -259,16 +259,15 @@ def compare_page():
 
     ''' Get and present the info after the user asks for it. '''
 
-    if request.method == "POST":
-        # compare user data with other user's data and send it to the html page
-        data = comparing()
-        user = data[0]
-        other_user = data[1]
 
-        return render_template("compared.html", user=user, other_user=other_user)
+    # compare user data with other user's data and send it to the html page
+    data = comparing()
 
-    # otherwise give the basic page
-    return render_template("compare.html")
+
+    return render_template("compare.html", data=data)
+
+
+
 
 # compared
 @app.route("/compared", methods=["GET", "POST"])

@@ -257,7 +257,8 @@ def topP():
 
 def compare(other_user):
     # search for other user's ID based on user name
-    other_id = db.execute("SELECT user_id FROM userdata WHERE username = :username", username=other_user)
+    other_id_raw = db.execute("SELECT user_id FROM userdata WHERE username = :username", username=other_user)
+    other_id = other_id_raw[0]["user_id"]
 
     # search for other user's stat's based on other user's ID
     numbers = db.execute("SELECT * FROM stats WHERE user_id = :user_id", user_id=other_id)
