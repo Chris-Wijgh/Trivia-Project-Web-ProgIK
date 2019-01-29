@@ -261,7 +261,9 @@ def compare_page():
 
     if request.method == "POST":
         # compare user data with other user's data and send it to the html page
-        comparing()
+        data = comparing()
+        user = data[0]
+        other_user = data[1]
 
         return render_template("compared.html", user=user, other_user=other_user)
 
@@ -277,7 +279,9 @@ def compared():
 
     if request.method == "POST":
         # compare user data with other user's data and send it to the html page
-        comparing()
+        data = comparing()
+        user = data[0]
+        other_user = data[1]
 
         return render_template("compared.html", user=user, other_user=other_user)
 
