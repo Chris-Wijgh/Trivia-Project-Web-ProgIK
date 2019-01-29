@@ -138,11 +138,9 @@ def result():
 
     correct = 0
     form = request.form
-
     # compare the answers
     for i in range(len(form)):
         answered = form[str(i)]
-        print(answered)
         if correct_answers[i]['correct_answer'] == answered:
             correct = correct+1
 
@@ -176,8 +174,9 @@ def top10():
     return render_template('top_10.html', top10_lijst=top10_lijst, top10_score=top10_score)
 
 
-# comparing
-def comparing():
+@app.route("/compare", methods=["GET", "POST"])
+@L
+def compare_page():
     ''' Get the user's data and the other user's data ready for predentation. '''
 
     # get the user's stats and ranks
@@ -203,40 +202,30 @@ def comparing():
     user = {"correct":correct, "score":score, "rank_nr":rank_nr, "rank_score":rank_score}
     other_user = {"name":other_user, "correct":other_correct, "score":other_score, "rank_nr":other_rank_nr, "rank_score":other_rank_score}
 
-    return user, other_user
-
-
-# compare
-@app.route("/compare", methods=["GET", "POST"])
-@L
-def compare_page():
-
-    ''' Get and present the info after the user asks for it. '''
-
-
-    # compare user data with other user's data and send it to the html page
-    data = comparing()
-
+    data = []
+    data.append(user)
+    data.append(other_user)
 
     return render_template("compare.html", data=data)
 
 
 
 
-# compared
-@app.route("/compared", methods=["GET", "POST"])
-@L
-def compared():
+''' NU NOG OVERBODIG '''
+# # compared
+# @app.route("/compared", methods=["GET", "POST"])
+# @L
+# def compared():
 
-    ''' get and present more info if the user asks for it '''
+#     ''' get and present more info if the user asks for it '''
 
-    if request.method == "POST":
-        # compare user data with other user's data and send it to the html page
-        data = comparing()
-        user = data[0]
-        other_user = data[1]
+#     if request.method == "POST":
+#         # compare user data with other user's data and send it to the html page
+#         data = comparing()
+#         user = data[0]
+#         other_user = data[1]
 
-        return render_template("compared.html", user=user, other_user=other_user)
+#         return render_template("compared.html", user=user, other_user=other_user)
 
-    # otherwise give the basic page
-    return render_template("compare.html")
+#     # otherwise give the basic page
+#     return render_template("compare.html")
