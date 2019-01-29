@@ -201,7 +201,7 @@ class Questions(object):
                     questions_from_tdb[x]['type'] = html.unescape(questions_from_tdb[x]['type'])
                     questions_from_tdb[x]['difficulty'] = html.unescape(questions_from_tdb[x]['difficulty'])
                     questions_from_tdb[x]['question'] = html.unescape(questions_from_tdb[x]['question'])
-                    questions_from_tdb[x]['correct_answers'] = html.unescape(questions_from_tdb[x]['correct_answers'])
+                    questions_from_tdb[x]['correct_answer'] = html.unescape(questions_from_tdb[x]['correct_answer'])
                     for i in range(len(questions_from_tdb[x]['incorrect_answers'])):
                         questions_from_tdb[x]['incorrect_answers'][i] =  html.unescape(questions_from_tdb[x]['incorrect_answers'][i])
 
