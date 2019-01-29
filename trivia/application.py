@@ -4,7 +4,7 @@ from flask_session import Session
 from passlib.apps import custom_app_context as pwd_context
 from tempfile import mkdtemp
 
-from functions import loginF, apology, L, stats, ranks, Questions, topNR, topP, compare
+from functions import loginF, apology, L, stats, ranks, Questions, topNR, topP, compare, register_user
 
 # configure application
 app = Flask(__name__)
@@ -48,7 +48,6 @@ def front_page():
 def login():
 
     ''' logs user in '''
-
     if loginF() == True:
         # remember which user has logged in
         rows = db.execute("SELECT * FROM userdata WHERE username = :username", username=request.form.get("username"))
@@ -78,56 +77,11 @@ def logout():
 def register():
 
     ''' registers new user '''
-
-    # forget any user_id
-    session.clear()
-
-    # if user reached route via POST (as by submitting a form via POST)
-    if request.method == "POST":
-
-        # ensure username was submitted
-        if not request.form.get("username"):
-            return apology("must provide username")
-
-        # ensure password was submitted
-        elif not request.form.get("password"):
-            return apology("must provide password")
-
-        #ensure password confirmation was submitted
-        elif not request.form.get("confirmation"):
-            return apology("must provide password confirmation")
-
-        # ensure passwords match
-        elif request.form.get("password") != request.form.get("confirmation"):
-            return apology("password doesn't match")
-
-        # insert new user data into database
-        insert = db.execute("INSERT INTO userdata (username, password) VALUES (:username, :password)", username=request.form.get("username") , password=pwd_context.hash(request.form.get("password")))
-
-
-
-        if not insert:
-            return apology("Username already exists")
-
-        # query database for username
-        rows = db.execute("SELECT * FROM userdata WHERE username = :username", username=request.form.get("username"))
-
-        # ensure username exists and password is correct
-        if len(rows) != 1 or not pwd_context.verify(request.form.get("password"), rows[0]["password"]):
-            return apology("invalid username and/or password")
-
-        # remember which user has logged in
-        session["user_id"] = rows[0]["user_id"]
-
-        insert_stats = db.execute("INSERT INTO stats (user_id) VALUES (:user_id)", user_id=session["user_id"])
-
-        # redirect user to home page
+    if register_user() == True:
         return redirect(url_for("index"))
 
-    # else if user reached route via GET (as by clicking a link or via redirect)
     else:
         return render_template("register.html")
-
 
 # index
 @app.route("/index", methods=["GET", "POST"])

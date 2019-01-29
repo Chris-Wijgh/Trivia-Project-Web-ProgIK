@@ -6,7 +6,7 @@ import urllib.request
 import requests
 import html
 
-from flask import redirect, render_template, request, session
+from flask import redirect, render_template, request, session, flash
 from functools import wraps
 
 
@@ -22,21 +22,67 @@ def loginF():
 
         # ensure username was submitted
         if not request.form.get("username"):
-            return apology("must provide username")
+            return flash("Must provide username!")
 
         # ensure password was submitted
         elif not request.form.get("password"):
-            return apology("must provide password")
+            return flash("Must provide password!")
 
         # query database for username
         rows = db.execute("SELECT * FROM userdata WHERE username = :username", username=request.form.get("username"))
 
         # ensure username exists and password is correct
         if len(rows) != 1 or not pwd_context.verify(request.form.get("password"), rows[0]["password"]):
-            return apology("invalid username and/or password")
+            return flash("Invalid username and/or password")
 
         return True
 
+def register_user():
+
+     # forget any user_id
+    session.clear()
+
+    # if user reached route via POST (as by submitting a form via POST)
+    if request.method == "POST":
+
+        # ensure username was submitted
+        if not request.form.get("username"):
+            return flash("Must provide username!")
+
+        # ensure password was submitted
+        elif not request.form.get("password"):
+            return flash("Must provide password!")
+
+        #ensure password confirmation was submitted
+        elif not request.form.get("confirmation"):
+            return flash("Must provide password confirmation!")
+
+        # ensure passwords match
+        elif request.form.get("password") != request.form.get("confirmation"):
+            return flash("Passwords do not match")
+
+        # insert new user data into database
+        insert = db.execute("INSERT INTO userdata (username, password) VALUES (:username, :password)", username=request.form.get("username") , password=pwd_context.hash(request.form.get("password")))
+
+
+
+        if not insert:
+            return flash("Username already exists")
+
+        # query database for username
+        rows = db.execute("SELECT * FROM userdata WHERE username = :username", username=request.form.get("username"))
+
+        # ensure username exists and password is correct
+        if len(rows) != 1 or not pwd_context.verify(request.form.get("password"), rows[0]["password"]):
+            return flash("Invalid username and/or password!")
+
+        # remember which user has logged in
+        session["user_id"] = rows[0]["user_id"]
+
+        insert_stats = db.execute("INSERT INTO stats (user_id) VALUES (:user_id)", user_id=session["user_id"])
+
+        # redirect user to home page
+        return True
 
 def apology(message, code=400):
     ### verandert ###
