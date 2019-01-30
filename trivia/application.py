@@ -4,7 +4,7 @@ from flask_session import Session
 from passlib.apps import custom_app_context as pwd_context
 from tempfile import mkdtemp
 
-from functions import loginF, apology, L, stats, ranks, Questions, topNR, topP, compare, register_user
+from functions import loginF, L, stats, ranks, Questions, topNR, topP, compare, register_user
 
 # configure application
 app = Flask(__name__)
@@ -109,8 +109,7 @@ def questions():
 
     # get questions from API
     opentdb_session = Questions()
-    opentdb_session.getToken()
-    dbquestions = opentdb_session.getQuestions(amount=10, use_token=True, category=22)
+    dbquestions = opentdb_session.getQuestions(amount=10, category=22)
 
     # add element in dict for all answers
     for x in range(10):

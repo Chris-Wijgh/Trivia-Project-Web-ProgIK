@@ -15,95 +15,71 @@ db = SQL("sqlite:///trivia.db")
 
 
 def loginF():
+    ''' Logs user into their account '''
+
     # forget any user_id
     session.clear()
 
-    # if user reached route via POST (as by submitting a form via POST)
     if request.method == "POST":
 
-        # ensure username was submitted
+        # validate user input
         if not request.form.get("username"):
             return flash("Must provide username!")
 
-        # ensure password was submitted
         elif not request.form.get("password"):
             return flash("Must provide password!")
 
-        # query database for username
         rows = db.execute("SELECT * FROM userdata WHERE username = :username", username=request.form.get("username"))
 
-        # ensure username exists and password is correct
         if len(rows) != 1 or not pwd_context.verify(request.form.get("password"), rows[0]["password"]):
             return flash("Invalid username and/or password")
 
         return True
 
 def register_user():
+    ''' Creates an account for first time users
+    and logs user in.
+    '''
 
-     # forget any user_id
+    # forget any user_id
     session.clear()
 
-    # if user reached route via POST (as by submitting a form via POST)
     if request.method == "POST":
 
-        # ensure username was submitted
+        # validate user input
         if not request.form.get("username"):
             return flash("Must provide username!")
 
-        # ensure password was submitted
         elif not request.form.get("password"):
             return flash("Must provide password!")
 
-        #ensure password confirmation was submitted
         elif not request.form.get("confirmation"):
             return flash("Must provide password confirmation!")
 
-        # ensure passwords match
         elif request.form.get("password") != request.form.get("confirmation"):
             return flash("Passwords do not match")
 
-        # insert new user data into database
+        # insert new user data into database and encrypts password
         insert = db.execute("INSERT INTO userdata (username, password) VALUES (:username, :password)", username=request.form.get("username") , password=pwd_context.hash(request.form.get("password")))
-
-
-
         if not insert:
             return flash("Username already exists")
 
-        # query database for username
+        # log in
         rows = db.execute("SELECT * FROM userdata WHERE username = :username", username=request.form.get("username"))
 
-        # ensure username exists and password is correct
         if len(rows) != 1 or not pwd_context.verify(request.form.get("password"), rows[0]["password"]):
             return flash("Invalid username and/or password!")
 
         # remember which user has logged in
         session["user_id"] = rows[0]["user_id"]
 
+        # create a stats row for new user
         insert_stats = db.execute("INSERT INTO stats (user_id) VALUES (:user_id)", user_id=session["user_id"])
 
-        # redirect user to home page
         return True
 
-def apology(message, code=400):
-    ### verandert ###
-    """Renders message as an apology to user."""
-    def escape(s):
-        """
-        Escape special characters.
-
-        https://github.com/jacebrowning/memegen#special-characters
-        """
-        for old, new in [("-", "--"), (" ", "-"), ("_", "__"), ("?", "~q"),
-                         ("%", "~p"), ("#", "~h"), ("/", "~s"), ("\"", "''")]:
-            s = s.replace(old, new)
-        return s
-    return render_template("apology.html", top=code, bottom=escape(message)), code
-
 def L(f):
-    # check if user is logged in
-    """
-    Decorate routes to require login.
+    """ Decorate routes to require login.
 
     http://flask.pocoo.org/docs/0.12/patterns/viewdecorators/
     """
@@ -116,10 +92,16 @@ def L(f):
 
 
 def stats():
+    ''' Queries the number of questions answered correctly
+    and caculates a weighted score.
+    '''
+
+    # query user stats
     numbers = db.execute("SELECT * FROM stats WHERE user_id = :user_id", user_id=session["user_id"])
     questions_nr = numbers[0]['vragen_beantwoord']
     correct = numbers[0]['vragen_goed']
 
+    # avoid division by zero
     if correct==0 or questions_nr ==0:
         score = 0
 
@@ -129,8 +111,13 @@ def stats():
     return correct, score
 
 def ranks():
+    ''' Calculates the position of the user in the rank list of number of questions answered correctly
+    and the rank list of highest score.
+    '''
+
     rank_nr = 0
     rank_score = 0
+
     # generate a list of dicts, ranked by Nr vragen goed, highest first
     numbers_ranked = list(reversed(db.execute("SELECT user_id, vragen_goed FROM stats ORDER by vragen_goed")))
 
@@ -151,6 +138,8 @@ def ranks():
      # create a list of id nrs paired with scores
     scores = list()
     for item in data:
+
+        # avoid division by zero
         if item["vragen_goed"]==0 or item["vragen_beantwoord"] ==0:
             score=0
 
@@ -178,85 +167,53 @@ def ranks():
 
 
 class Questions(object):
-        # gives list of lists of questions from external DB
-        def __init__(self):
-                self.__API_BASEURL = 'https://opentdb.com'
-                self.__API_ENDPOINT = '/api.php'
-                self.__API_TOKEN_ENDPOINT = '/api_token.php'
-                self.__API_TOKEN = False
+    def __init__(self):
+        ''' Initializes the baseurl and endpoint.'''
 
-        def __apiRequest(self, url, params):
-            """
-                Used internally by the question object to make calls to the API.
-                Parameters:
-                    -url: the URL of the API endpoint.
-                    -params: parameters for the request.
-                Returns the JSON response in the form of a Dictionary.
-                Otherwise, an exception is raised.
-            """
-            try:
-                response = requests.get(url, params=params)
-            except requests.exceptions.RequestException:
-                raise ConnectionError('Failed to connect to OpenTDB.')
-            try:
-                response.raise_for_status()
-                response = response.json()
-                assert response['response_code'] == 0
-                return response
-            except:
-                raise ValueError
-                ''' TODO '''
-                # return apology('Something went wrong')
+        self.__API_BASEURL = 'https://opentdb.com'
+        self.__API_ENDPOINT = '/api.php'
 
-        def getToken(self):
-                """
-                    Requests a session token from the API.
-                    Returns True if session token was successfully obtained.
-                    Otherwise, an exception is raised.
-                """
-                url = self.__API_BASEURL + self.__API_TOKEN_ENDPOINT
-                params = { 'command': 'request' }
-                response = self.__apiRequest(url, params)
-                self.__API_TOKEN = response['token']
-                return True
+    def __apiRequest(self, url, params):
+        ''' Used internally by the question object to make calls to the API. '''
 
-        def getQuestions(self, amount=10, category=0, use_token=False):
-                """
-                    Requests a set of questions from the API.
-                    Parameters:
-                        -amount:    how many questions to request.
-                        -category:  which category the questions should be from.
-                                    If this is set to False, questions will be from all categories.
-                        -use_session_token: whether or not to use the token,
-                                            which is generated with getToken()
-                    Returns a List of Question objects.
-                """
-                url = self.__API_BASEURL + self.__API_ENDPOINT
-                params = { 'amount': amount }
-                try:
-                    params['category'] = int(category)
-                except:
-                    params['category'] = 0
-                if use_token and self.__API_TOKEN:
-                    params['token'] = self.__API_TOKEN
-                response = self.__apiRequest(url, params)
-                questions_from_tdb = response['results']
+        # request from api
+        response = requests.get(url, params=params)
+        response.raise_for_status()
 
-                # html parsing
-                for x in range(len(questions_from_tdb)):
-                    questions_from_tdb[x]['category'] = html.unescape(questions_from_tdb[x]['category'])
-                    questions_from_tdb[x]['type'] = html.unescape(questions_from_tdb[x]['type'])
-                    questions_from_tdb[x]['difficulty'] = html.unescape(questions_from_tdb[x]['difficulty'])
-                    questions_from_tdb[x]['question'] = html.unescape(questions_from_tdb[x]['question'])
-                    questions_from_tdb[x]['correct_answer'] = html.unescape(questions_from_tdb[x]['correct_answer'])
-                    for i in range(len(questions_from_tdb[x]['incorrect_answers'])):
-                        questions_from_tdb[x]['incorrect_answers'][i] =  html.unescape(questions_from_tdb[x]['incorrect_answers'][i])
+        # convert to json format
+        response = response.json()
 
-                return questions_from_tdb
-    # gives list of lists of questions from external DB
+        assert response['response_code'] == 0
+        return response
+
+    def getQuestions(self, category, amount=10):
+        """ Requests a set of questions from the API
+        and returns them parsed.
+        """
+
+        url = self.__API_BASEURL + self.__API_ENDPOINT
+
+        # set parameters for api request
+        params = {'amount': amount}
+        params['category'] = int(category)
+        response = self.__apiRequest(url, params)
+        questions_from_tdb = response['results']
+
+        # HTML parsing
+        for x in range(len(questions_from_tdb)):
+            questions_from_tdb[x]['category'] = html.unescape(questions_from_tdb[x]['category'])
+            questions_from_tdb[x]['type'] = html.unescape(questions_from_tdb[x]['type'])
+            questions_from_tdb[x]['difficulty'] = html.unescape(questions_from_tdb[x]['difficulty'])
+            questions_from_tdb[x]['question'] = html.unescape(questions_from_tdb[x]['question'])
+            questions_from_tdb[x]['correct_answer'] = html.unescape(questions_from_tdb[x]['correct_answer'])
+
+            for i in range(len(questions_from_tdb[x]['incorrect_answers'])):
+                questions_from_tdb[x]['incorrect_answers'][i] =  html.unescape(questions_from_tdb[x]['incorrect_answers'][i])
+
+        return questions_from_tdb
 
 def topNR():
-     # gives top 10 of users based on questions answered correctly
+     ''' Creates top 10 of users based on questions answered correctly. '''
 
      # gives inverse ranking of users based on questions correct
      nr_rank_low = db.execute("SELECT user_id, vragen_goed FROM stats ORDER by vragen_goed")
@@ -277,51 +234,54 @@ def topNR():
      return nr_rank_10
 
 def topP():
-     # gives top 10 of users based on score
+    ''' Creates top 10 of users based on score '''
 
-     # gets the relevant data for all users in a list of dictionaries
-     data = db.execute("SELECT user_id, vragen_goed, vragen_beantwoord FROM stats ORDER by vragen_goed")
+    # gets the relevant data for all users in a list of dictionaries
+    data = db.execute("SELECT user_id, vragen_goed, vragen_beantwoord FROM stats ORDER by vragen_goed")
 
-     # create a list of id nrs paired with scores
-     scores = list()
-     for item in data:
-         if item["vragen_goed"]==0 or item["vragen_beantwoord"] ==0:
+    # create a list of id nrs paired with scores
+    scores = list()
+    for item in data:
+
+        # avoid division by zero
+        if item["vragen_goed"]==0 or item["vragen_beantwoord"] ==0:
             score=0
-         else:
+        else:
             score = round((item["vragen_goed"] / item["vragen_beantwoord"]) * 100 * item["vragen_goed"])
-         u_id = item["user_id"]
-         username = db.execute("SELECT username FROM userdata WHERE user_id = :user_id", user_id=u_id)
-         scores.append({"user_id":u_id, "username":username[0]["username"],"user_score":score})
+
+        u_id = item["user_id"]
+        username = db.execute("SELECT username FROM userdata WHERE user_id = :user_id", user_id=u_id)
+        scores.append({"user_id":u_id, "username":username[0]["username"],"user_score":score})
 
     # sorts list based on score
-     scores = sorted(scores, key=itemgetter('user_score'))
+    scores = sorted(scores, key=itemgetter('user_score'))
 
     # generate highest 10 ranking users based on score
-     score_rank_10 = list()
-     counter = 0
-     if counter < 10:
-         for item in reversed(scores):
+    score_rank_10 = list()
+    counter = 0
+    if counter < 10:
+        for item in reversed(scores):
             score_rank_10.append(item)
             counter += 1
-     return score_rank_10
+
+    return score_rank_10
 
 def compare(other_user):
-    # search for other user's ID based on user name
+    ''' Compares the stats of the user with another requested user. '''
 
-
+    # search for other user's ID based on user name, return false if user input is wrong
     try:
         other_id_raw = db.execute("SELECT user_id FROM userdata WHERE username = :username", username=other_user)
         other_id = other_id_raw[0]["user_id"]
     except:
         return False
 
-
-
     # search for other user's stat's based on other user's ID
     numbers = db.execute("SELECT * FROM stats WHERE user_id = :user_id", user_id=other_id)
     questions_nr = numbers[0]['vragen_beantwoord']
     other_correct = numbers[0]['vragen_goed']
 
+    # avoid division by zero
     if questions_nr == 0 or other_correct == 0:
         other_score = 0
 
