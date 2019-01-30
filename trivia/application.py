@@ -153,7 +153,7 @@ def result():
     beantwoord = beantwoord + 10
     goed = goed + correct
 
-    db.execute("UPDATE stats SET vragen_beantwoord = :beantwoord, vragen_goed = :correct WHERE user_id = :user_id", beantwoord = beantwoord, correct = correct, user_id=session["user_id"])
+    db.execute("UPDATE stats SET vragen_beantwoord = :beantwoord, vragen_goed = :goed WHERE user_id = :user_id", beantwoord = beantwoord, goed = goed, user_id=session["user_id"])
 
     # remove the data from the database
     db.execute("DELETE FROM questions")
