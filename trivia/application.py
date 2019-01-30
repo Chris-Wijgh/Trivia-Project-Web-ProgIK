@@ -27,25 +27,25 @@ Session(app)
 db = SQL("sqlite:///trivia.db")
 
 
-
-
-
 @app.route("/")
 @app.route("/frontpage", methods=["GET"])
 @L
 def front_page():
-    '''
-    front page, links to login and registration.
+    ''' Front page
+    Redirects user to login and registration.
     '''
 
     return render_template("frontpage.html")
 
-# login
+
 @app.route("/login", methods=["GET", "POST"])
 def login():
+    ''' Logs user in
+    If succesful, redirects user to index.
+    '''
 
-    ''' logs user in '''
     if loginF() == True:
+
         # remember which user has logged in
         rows = db.execute("SELECT * FROM userdata WHERE username = :username", username=request.form.get("username"))
         session["user_id"] = rows[0]["user_id"]
@@ -53,57 +53,60 @@ def login():
         # redirect user to home page
         return redirect(url_for("index"))
 
-    # else if user reached route via GET (as by clicking a link or via redirect)
     else:
         return render_template("login.html")
 
+
 @app.route("/logout")
 def logout():
-
-    '''' logs user out '''
+    ''' Logs user out
+    and redirects user to login.
+    '''
 
     # forget any user_id
     session.clear()
 
     # redirect user to login form
+    flash('You have been logged out')
     return redirect(url_for("login"))
 
 
 # register
 @app.route("/register", methods=["GET", "POST"])
 def register():
-
-    ''' registers new user '''
+    ''' Registers new user
+    If succesful, redirects user to index.
+    '''
     if register_user() == True:
         return redirect(url_for("index"))
 
     else:
         return render_template("register.html")
 
-# index
+
 @app.route("/index", methods=["GET", "POST"])
 @L
 def index():
+    ''' Generates user stats and displays them. '''
 
-     ''' generate user stats '''
+    # generate user stats
+    statistics = stats()
+    correct = statistics[0]
+    score = statistics[1]
 
-     statistics = stats()
-     correct = statistics[0]
-     score = statistics[1]
+    # generate user ranking in all lists
+    rankings = ranks()
+    rank_nr = rankings[0]
+    rank_score = rankings[1]
 
-     # generate user ranking in all lists
-     rankings = ranks()
-     rank_nr = rankings[0]
-     rank_score = rankings[1]
+    return render_template("index.html", correct=correct, score=score, rank_nr=rank_nr, rank_score=rank_score)
 
-     return render_template("index.html", correct=correct, score=score, rank_nr=rank_nr, rank_score=rank_score)
 
-# questions
 @app.route("/questions", methods=["GET", "POST"])
 @L
 def questions():
+    ''' User gets trivia questions to answer '''
 
-    ''' user gets trivia questions to answer '''
     # remove any left over questions from database
     db.execute("DELETE FROM questions")
 
@@ -124,10 +127,10 @@ def questions():
     return render_template("questions.html", dbquestions=dbquestions)
 
 
-# result
 @app.route("/result", methods=["GET", "POST"])
 @L
 def result():
+    ''' Displays the amount of questions the user has correctly answered '''
 
     # select the correct answers from the db
     correct_answers=db.execute("SELECT question, correct_answer FROM questions")
@@ -135,6 +138,7 @@ def result():
     correct = 0
     form = request.form
 
+    # if user did not answer all questions, flash an error
     if len(form) < 9:
         flash("You need to answer all questions before submitting")
         return redirect(url_for("questions"))
@@ -146,6 +150,7 @@ def result():
         if correct_answers[i]['correct_answer'] == answered:
             correct = correct+1
 
+
     beantwoord_raw = db.execute("SELECT vragen_beantwoord FROM stats WHERE user_id=:user_id", user_id=session["user_id"])
     beantwoord = beantwoord_raw[0]['vragen_beantwoord']
 
@@ -155,20 +160,20 @@ def result():
     beantwoord = beantwoord + 10
     goed = goed + correct
 
+    # update stats in database
     db.execute("UPDATE stats SET vragen_beantwoord = :beantwoord, vragen_goed = :goed WHERE user_id = :user_id", beantwoord = beantwoord, goed = goed, user_id=session["user_id"])
 
     # remove the data from the database
     db.execute("DELETE FROM questions")
 
-
     # return the number of correct answers
     return render_template('end.html', correct=correct)
 
 
-# Top 10
 @app.route("/top10", methods=["GET"])
 @L
 def top10():
+    ''' Displays top 10 lists to user '''
 
     top10_lijst = topNR()
     top10_score = topP()
@@ -179,10 +184,11 @@ def top10():
 @app.route("/compare", methods=["GET", "POST"])
 @L
 def compare_page():
-    ''' Get the user's data and the other user's data ready for predentation. '''
+    ''' Get the user's stats and the other user's stats and presents it '''
 
     other_user = request.form.get("other_user_name")
 
+    # if user input is incorrect, return an error
     if compare(other_user) == False:
         flash("Invalid username!")
         return render_template("index.html")
@@ -213,25 +219,3 @@ def compare_page():
     data.append(other_user)
 
     return render_template("compare.html", data=data)
-
-
-
-
-''' NU NOG OVERBODIG '''
-# # compared
-# @app.route("/compared", methods=["GET", "POST"])
-# @L
-# def compared():
-
-#     ''' get and present more info if the user asks for it '''
-
-#     if request.method == "POST":
-#         # compare user data with other user's data and send it to the html page
-#         data = comparing()
-#         user = data[0]
-#         other_user = data[1]
-
-#         return render_template("compared.html", user=user, other_user=other_user)
-
-#     # otherwise give the basic page
-#     return render_template("compare.html")
