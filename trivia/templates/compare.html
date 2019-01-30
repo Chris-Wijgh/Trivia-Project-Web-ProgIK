@@ -11,7 +11,6 @@
    <a href="{{ url_for('questions') }}" class="btn btn-default">Give me 10 questions!</a>
    <a href="{{ url_for('index') }}" class="btn btn-default">Return to index!</a>
    </div>
-
    <div class="column">
         <table class="table table-bordered">
             <thead>
@@ -21,18 +20,13 @@
                 <th>{{ data[1]["name"] }} CounTrivia Score <span title="Total correct / Total answered * 100 * Total correct (number has been rounded up)">(?)</span> </th>
             </thead>
             <tbody>
-
                 <tr>
                 <td>{{ data[0]["correct"] }} (Place on leaderboard {{data[0]["rank_nr"]}} )</td>
                 <td>{{ data[0]["score"] }} (Place on leaderboard {{data[0]["rank_score"]}} )</td>
                 <td>{{ data[1]["correct"]}} (Place on leaderboard {{data[1]["rank_nr"]}} )</td>
                 <td>{{ data[1]["score"] }} (Place on leaderboard {{data[1]["rank_score"]}} )</td>
-
                 </tr>
-
-
             </tbody>
          </table>
     </div>
-
 {% endblock %}

@@ -10,7 +10,6 @@
         {% for i in range(10) %}
           <li>
             <h2>{{ dbquestions[i]['question'] }} </h2>
-            <!--  New ul with class of 'courses' -->
             <ul class='all_answers'>
                 {% for x in dbquestions[i]['all_answers'] %}
                     <input type='radio' value='{{x}}' name='{{i}}' />{{x}}
