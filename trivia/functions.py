@@ -8,6 +8,7 @@ import html
 
 from flask import redirect, render_template, request, session, flash
 from functools import wraps
+from operator import itemgetter
 
 
 db = SQL("sqlite:///trivia.db")
@@ -291,6 +292,9 @@ def topP():
          u_id = item["user_id"]
          username = db.execute("SELECT username FROM userdata WHERE user_id = :user_id", user_id=u_id)
          scores.append({"user_id":u_id, "username":username[0]["username"],"user_score":score})
+
+    # sorts list based on score
+     scores = sorted(scores, key=itemgetter('user_score'))
 
     # generate highest 10 ranking users based on score
      score_rank_10 = list()
