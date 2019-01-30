@@ -16,7 +16,7 @@
         <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
-        <title>Landen-Trivia {% block title %}{% endblock %}</title>
+        <title>CounTrivia {% block title %}{% endblock %}</title>
 
     </head>
 
@@ -44,10 +44,14 @@
                             <span class="icon-bar"></span>
                         </button>
 
-                        <a class="navbar-brand" a class="text-align" href="{{ url_for('login') }}">Landen-Trivia</a>
+                        <a class="navbar-brand" a class="text-align" href="{{ url_for('login') }}">CounTrivia</a>
                     </div>
                     <div class="collapse navbar-collapse" id="navbar">
                         {% if session.user_id %}
+                         <ul class="nav navbar-nav navbar-right">
+                                <li><a href="{{ url_for('logout') }}">Log Out</a></li>
+                            </ul>
+
 
                         {% else %}
                             <ul class="nav navbar-nav navbar-right">
