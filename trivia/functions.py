@@ -123,7 +123,7 @@ def stats():
         score = 0
 
     else:
-        score = (correct / questions_nr) * 100 * correct
+        score = round((correct / questions_nr) * 100 * correct)
 
     return correct, score
 
