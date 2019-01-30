@@ -3,7 +3,7 @@ Code for the trivia webpage project /Chris Wijgh/ Jesper Kok / Dido Verstegen.
 
 ### De webapp
 
-Wij hebben een Trivia spel gemaakt dat gaat over landen. De gebruikers beantwoorden vragen in sets van 10. De vragen worden aan de gebruiker getoond en hij/zij probeert voor alle 10 vragen het juiste antwoord aan te klikken. Aan het einde van de set van 10 komt er een overzicht waarin staat hoeveel vragen er goed zijn beantwoord door de gebruiker. 
+Wij hebben een Trivia spel gemaakt dat gaat over landen. De gebruikers beantwoorden vragen in sets van 10. De vragen worden aan de gebruiker getoond en hij/zij probeert voor alle 10 vragen het juiste antwoord aan te klikken. Aan het einde van de set van 10 komt er een overzicht waarin staat hoeveel vragen er goed zijn beantwoord door de gebruiker. Ook is op dit scherm te zien welke antwoorden zijn gegeven door de gebruiker en welke antwoorden er gegeven hadden moeten worden. Zo is er dus instant feedback.  
 Gebruikers komen in top 10 lijsten te staan op basis van aantal goede vragen en een speciale CounTrivia score (hierbij wordt het aantal vragen goed gedeeld door het totaal aantal beantwoorde vragen keer 100 en vervolgens weer keer het aantal goed beantwoordde vragen).  Verder beschikt onze webapp over een zoekfunctie waarmee binnen de ranglijsten kan worden gezocht naar specifieke gebruikers zodat je onderling kunt concurreren met je vrienden en/of vijanden, ook als deze niet in de top 10 staan.
 
 
@@ -16,7 +16,7 @@ Gebruikers komen in top 10 lijsten te staan op basis van aantal goede vragen en 
 ### questions
 <img src="https://i.imgur.com/4as3jbe.png" width="200"> <br>
 ### results
-<img src="https://i.imgur.com/m3wKIAU.png" width="200"> <br>
+<img src="https://i.imgur.com/dotSpxN.png" width="200"> <br>
 ### compare
 <img src="https://i.imgur.com/KNfmKRK.png" width="200"> <br>
 ### top10
@@ -24,7 +24,7 @@ Gebruikers komen in top 10 lijsten te staan op basis van aantal goede vragen en 
 
 ### Features
 
-Deze webapp beschikt over de volgende features: Je kan je registeren, inloggen en uitloggen bij onze webapp. Vervolgens is het mogelijk om ons trivia spel te spelen en sets van 10 vragen te beantwoorden. Er kan worden gekeken in de top 10 lijsten waarin zowel een lijst is gemaakt voor het totaal aantal goed beantwoorde vragen als een lijst waarin wordt gekeken naar een zelfbedachte Trivia-score. Tot slot is het ook mogelijk om jezelf te vergelijken met iedere andere gebruiker en jullie scores en totaal aantal goed beantwoordde vragen naast elkaar te leggen. 
+Deze webapp beschikt over de volgende features: Je kan je registeren, inloggen en uitloggen bij onze webapp. Vervolgens is het mogelijk om ons trivia spel te spelen en sets van 10 vragen te beantwoorden en te zien welke vragen er goed of fout zijn beantwoord, ook worden alle goede antwoorden gegeven zodat je er iets van kunt leren. Er kan worden gekeken in de top 10 lijsten waarin zowel een lijst is gemaakt voor het totaal aantal goed beantwoorde vragen als een lijst waarin wordt gekeken naar een zelfbedachte Trivia-score. Tot slot is het ook mogelijk om jezelf te vergelijken met iedere andere gebruiker en jullie scores en totaal aantal goed beantwoordde vragen naast elkaar te leggen. 
 
 ### Guide
 
