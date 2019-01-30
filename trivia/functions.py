@@ -154,7 +154,7 @@ def ranks():
             score=0
 
         else:
-            score = (item["vragen_goed"] / item["vragen_beantwoord"]) * 100 * item["vragen_goed"]
+            score = round((item["vragen_goed"] / item["vragen_beantwoord"]) * 100 * item["vragen_goed"])
 
         u_id = item["user_id"]
         scores.append({"user_id":u_id, "user_score":score})
@@ -287,7 +287,7 @@ def topP():
          if item["vragen_goed"]==0 or item["vragen_beantwoord"] ==0:
             score=0
          else:
-            score = (item["vragen_goed"] / item["vragen_beantwoord"]) * 100 * item["vragen_goed"]
+            score = round((item["vragen_goed"] / item["vragen_beantwoord"]) * 100 * item["vragen_goed"])
          u_id = item["user_id"]
          username = db.execute("SELECT username FROM userdata WHERE user_id = :user_id", user_id=u_id)
          scores.append({"user_id":u_id, "username":username[0]["username"],"user_score":score})
@@ -322,7 +322,7 @@ def compare(other_user):
         other_score = 0
 
     else:
-        other_score = (other_correct / questions_nr) * 100 * other_correct
+        other_score = round((other_correct / questions_nr) * 100 * other_correct)
 
     # generate a list of dicts, ranked by Nr vragen goed, lowest first
     numbers_ranked = db.execute("SELECT user_id, vragen_goed FROM stats ORDER by vragen_goed")
@@ -356,7 +356,7 @@ def compare(other_user):
             score = 0
 
         else:
-            score = (item["vragen_goed"] / item["vragen_beantwoord"]) * 100 * item["vragen_goed"]
+            score = round((item["vragen_goed"] / item["vragen_beantwoord"]) * 100 * item["vragen_goed"])
 
         u_id = item["user_id"]
         scores.append({"user_id":u_id, "user_score":score})
