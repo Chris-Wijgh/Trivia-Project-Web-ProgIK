@@ -34,14 +34,11 @@ db = SQL("sqlite:///trivia.db")
 @app.route("/frontpage", methods=["GET"])
 @L
 def front_page():
-
-    ''' front page linking to login and registration '''
+    '''
+    front page, links to login and registration.
+    '''
 
     return render_template("frontpage.html")
-
-
-### TODO Jesper
-
 
 # login
 @app.route("/login", methods=["GET", "POST"])
@@ -138,8 +135,14 @@ def result():
 
     correct = 0
     form = request.form
+
+    if len(form) < 9:
+        flash("You need to answer all questions before submitting")
+        return redirect(url_for("questions"))
+
     # compare the answers
     for i in range(len(form)):
+
         answered = form[str(i)]
         if correct_answers[i]['correct_answer'] == answered:
             correct = correct+1
