@@ -139,17 +139,21 @@ def result():
     form = request.form
 
     # if user did not answer all questions, flash an error
-    if len(form) < 9:
+    if len(form) < 10:
         flash("You need to answer all questions before submitting")
         return redirect(url_for("questions"))
 
+    allanswers = {}
+
     # compare the answers
-    for i in range(len(form)):
-
+    for i in range(10):
         answered = form[str(i)]
-        if correct_answers[i]['correct_answer'] == answered:
-            correct = correct+1
 
+        # create dict for all answers so the user can see what he/she answered
+        allanswers[answered] = correct_answers[i]['correct_answer']
+
+        if correct_answers[i]['correct_answer'] == answered:
+            correct = correct + 1
 
     beantwoord_raw = db.execute("SELECT vragen_beantwoord FROM stats WHERE user_id=:user_id", user_id=session["user_id"])
     beantwoord = beantwoord_raw[0]['vragen_beantwoord']
@@ -167,7 +171,7 @@ def result():
     db.execute("DELETE FROM questions")
 
     # return the number of correct answers
-    return render_template('end.html', correct=correct)
+    return render_template('end.html', correct=correct, allanswers=allanswers)
 
 
 @app.route("/top10", methods=["GET"])
