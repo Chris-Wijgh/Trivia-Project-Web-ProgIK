@@ -179,6 +179,14 @@ def top10():
 def compare_page():
     ''' Get the user's data and the other user's data ready for predentation. '''
 
+    other_user = request.form.get("other_user_name")
+
+    if compare(other_user) == False:
+        flash("Invalid username!")
+        return render_template("index.html")
+
+    other_user_stats = compare(other_user)
+
     # get the user's stats and ranks
     statistics = stats()
     correct = statistics[0]
@@ -189,11 +197,7 @@ def compare_page():
     rank_nr = rankings[0]
     rank_score = rankings[1]
 
-
     # get the other user's stats and ranks
-    other_user = request.form.get("other_user_name")
-    other_user_stats = compare(other_user)
-
     other_correct = other_user_stats[0]
     other_score = other_user_stats[1]
     other_rank_nr = other_user_stats[2]
