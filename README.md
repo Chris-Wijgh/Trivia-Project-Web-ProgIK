@@ -1,72 +1,31 @@
 # Trivia-Project-Web-ProgIK
-Code for the trivia webpage project /Chris/ Jesper / Dido.
+Code for the trivia webpage project /Chris Wijgh/ Jesper Kok / Dido Verstegen.
 
-### Voorstel
+### De webapp
 
-Wij willen een Trivia spel gaan maken dat gaat over landen. De gebruikers beantwoorden vragen in sets van 10. De vragen worden aan de gebruiker getoond en hij probeert voor alle 10 vragen het juiste antwoord aan te klikken. Aan het einde van de set van 10 komt er een overzicht waarin staat hoeveel vragen er goed zijn beantwoord door de gebruiker. 
-Gebruikers komen in top 10 lijsten te staan op basis van aantal goede vragen en een speciale CounTrivia score (hierbij wordt het aantal vragen goed gedeeld door het totaal aantal beantwoorde vragen keer 100 en vervolgens weer keer het aantal goed beantwoordde vragen).  Verder willen we een zoekfunctie maken binnen de ranglijst zodat je onderling kunt concurreren met je vrienden en/of vijanden, ook als deze niet in de top 10 staan.
-
-### Controller
+Wij hebben een Trivia spel gemaakt dat gaat over landen. De gebruikers beantwoorden vragen in sets van 10. De vragen worden aan de gebruiker getoond en hij/zij probeert voor alle 10 vragen het juiste antwoord aan te klikken. Aan het einde van de set van 10 komt er een overzicht waarin staat hoeveel vragen er goed zijn beantwoord door de gebruiker. 
+Gebruikers komen in top 10 lijsten te staan op basis van aantal goede vragen en een speciale CounTrivia score (hierbij wordt het aantal vragen goed gedeeld door het totaal aantal beantwoorde vragen keer 100 en vervolgens weer keer het aantal goed beantwoordde vragen).  Verder beschikt onze webapp over een zoekfunctie waarmee binnen de ranglijsten kan worden gezocht naar specifieke gebruikers zodat je onderling kunt concurreren met je vrienden en/of vijanden, ook als deze niet in de top 10 staan.
 
 
-Frontpage	-	GET
-Login		-	GET+POST
-Registratie	-	GET+POST
-Index		-	GET+POST
-Vragen		-	GET+POST
-Uitslag		-	GET
-Top 10		-	GET
-Compare	-	GET+POST
-End - GET 
-
-
-
-### Views
-<img src="https://i.imgur.com/yDj1ZRy.png" width="200"> <br>
-#### frontpage
-<img src="https://i.imgur.com/S79mOVy.png" width="200"> <br>
 #### login-page
-<img src="https://i.imgur.com/oCVGGU4.png" width="200"> <br>
+<img src="https://i.imgur.com/fqnuqbm.png" width="200"> <br>
 ### register-page
-<img src="https://i.imgur.com/sIfgpEI.png" width="200"> <br>
+<img src="https://i.imgur.com/JGqN1XT.png" width="200"> <br>
 ### index
-<img src="https://i.imgur.com/ZpZ4hMQ.png" width="200"> <br>
-### vragen
-<img src="https://i.imgur.com/YtBoNwt.png" width="200"> <br>
-### resultaten
-<img src="https://i.imgur.com/YNVrxN7.png" width="200"> <br>
-### vergelijk
-<img src="https://i.imgur.com/mdYQ6Qq.png" width="200"> <br>
+<img src="https://i.imgur.com/CAm82yK.png" width="200"> <br>
+### questions
+<img src="https://i.imgur.com/4as3jbe.png" width="200"> <br>
+### results
+<img src="https://i.imgur.com/m3wKIAU.png" width="200"> <br>
+### compare
+<img src="https://i.imgur.com/KNfmKRK.png" width="200"> <br>
 ### top10
-<img src="https://i.imgur.com/0EDiLhv.png" width="200"> <br>
+<img src="https://i.imgur.com/0HCjKD4.png" width="200"> <br>
 
+### Features
 
-### Models/helpers
+Deze webapp beschikt over de volgende features: Je kan je registeren, inloggen en uitloggen bij onze webapp. Vervolgens is het mogelijk om ons trivia spel te spelen en sets van 10 vragen te beantwoorden. Er kan worden gekeken in de top 10 lijsten waarin zowel een lijst is gemaakt voor het totaal aantal goed beantwoorde vragen als een lijst waarin wordt gekeken naar een zelfbedachte Trivia-score. Tot slot is het ook mogelijk om jezelf te vergelijken met iedere andere gebruiker en jullie scores en totaal aantal goed beantwoordde vragen naast elkaar te leggen. 
 
-login()		-	Laat de gebruiker inloggen<br>
-register()	-	Laat de gebruiker registreren + logt in<br>
-l()		-	Gheckt of de gebruiker ingelogt is<br>
-stats()		-	Geeft aantal vragen correct + % correct<br>
-ranks()		-	Geeft de plaats in de scorelijsten aan van de gebruiker in Nr en %<br>
-questions()	-	Genereert de lijst van vragen<br>
-store()		-	Slaat de aangepaste vragen informatie van de gebruiker op in de database<br>
-top-nr()	-	Geeft de top 10 mbt. vragen correct van alle gebruikers<br>
-top-%()	-	Geeft de top 10 mbt. percentage correct van alle gebruikers<br>
-compare()	-	Geeft de stats van de gebruiker + die van een geselecteerde andere gebruiker<br>
-result()		-	Controleert antwoorden van de gebruiker + geeft correcte antwoorden<br>
-logout()	-	Logt de gebruiker uit<br>
+### Guide
 
-### Databases
-
-Externe Database	-	De bron van onze vragen<br>
-users			-	ID Nr + naam + password hash van elke gebruiker<br>
-stats			-	ID Nr + aantal vragen beatwoord + aantal vragen goed (+ punten)<br>
-
-
-### Plugins en frameworks + documentatie
-flask http://flask.pocoo.org/<br>
-passlib. https://passlib.readthedocs.io/en/stable/lib/passlib.apps.html/<br>
-sql https://www.w3schools.com/sql/<br>
-
-<br>
-
+In deze repository staan een aantal files die onze webapp maken. Er zijn een aantal hoofddelen: De Database waarin we onze gebruikers gegevens, statistieken en vragen beheren, Application.py waarin alle approutes staan, Functions.py waarin alle losse functies staan die nodig zijn om de webapp te laten werken, Templates waarin alle html templates staan en tot slot Static waarin alle css staat. 
