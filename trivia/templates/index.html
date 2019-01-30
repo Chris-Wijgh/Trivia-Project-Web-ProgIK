@@ -12,8 +12,8 @@
     <br>
 <div class="row">
    <div class="column">
-   <a href="{{ url_for('questions') }}" class="btn btn-default">Geef mij 10 vragen!</a>
-   <a href="{{url_for('top10') }}" class="btn btn-default">Geef top 10 weer!</a>
+   <a href="{{ url_for('questions') }}" class="btn btn-default">Give me 10 questions!</a>
+   <a href="{{url_for('top10') }}" class="btn btn-default">Show top 10!</a>
    </div>
 
 
@@ -21,15 +21,15 @@
   <!-- <form action="{{ url_for('register') }}" method="post"> -->
         <table class="table table-bordered">
             <thead>
-                <th>Aantal vragen goed</th>
-                <th>Superscore C</th>
+                <th>Total correct</th>
+                <th>CounTrivia Score <span title="Total correct / Total answered * 100 * Total correct">(?)</span></th>
 
             </thead>
             <tbody>
 
                 <tr>
-                    <td>{{ correct }} ({{rank_nr}}e)</td>
-                    <td>{{ score }} ({{rank_score}}e)</td>
+                    <td>{{ correct }} (Place on leaderboard {{rank_nr}})</td>
+                    <td>{{ score }} (Place on leaderboard {{rank_score}})</td>
 
 
                 </tr>

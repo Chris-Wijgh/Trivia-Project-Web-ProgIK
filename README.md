@@ -3,13 +3,13 @@ Code for the trivia webpage project /Chris/ Jesper / Dido.
 
 ### Voorstel
 
-Wij willen een Trivia spel gaan maken dat gaat over landen. De gebruikers beantwoorden vragen in sets van 10. De vragen worden een voor een aan de gebruiker getoond. Na het beantwoorden van een vraag komt de volgende vraag, totdat alle vragen beantwoord zijn. Aan het einde van de set van 10 komt er een overzicht waarin staat welke vragen goed en fout zijn beantwoord waarbij het goede antwoord erbij wordt vermeld.
-Gebruikers komen in top 10 lijsten te staan op basis van aantal goede vragen en percentage goed beantwoorde vragen. Verder willen we een zoekfunctie maken binnen de ranglijst zodat je onderling kunt concurreren met je vrienden en/of vijanden, ook als deze niet in de top 10 staan.
+Wij willen een Trivia spel gaan maken dat gaat over landen. De gebruikers beantwoorden vragen in sets van 10. De vragen worden aan de gebruiker getoond en hij probeert voor alle 10 vragen het juiste antwoord aan te klikken. Aan het einde van de set van 10 komt er een overzicht waarin staat hoeveel vragen er goed zijn beantwoord door de gebruiker. 
+Gebruikers komen in top 10 lijsten te staan op basis van aantal goede vragen en een speciale CounTrivia score (hierbij wordt het aantal vragen goed gedeeld door het totaal aantal beantwoorde vragen keer 100 en vervolgens weer keer het aantal goed beantwoordde vragen).  Verder willen we een zoekfunctie maken binnen de ranglijst zodat je onderling kunt concurreren met je vrienden en/of vijanden, ook als deze niet in de top 10 staan.
 
 ### Controller
 
 
-Voorpagina	-	GET
+Frontpage	-	GET
 Login		-	GET+POST
 Registratie	-	GET+POST
 Index		-	GET+POST
@@ -17,8 +17,9 @@ Vragen		-	GET+POST
 Uitslag		-	GET
 Top 10		-	GET
 Compare	-	GET+POST
-Compared	-	GET+POST
-Apology	-	GET
+End - GET 
+
+
 
 ### Views
 <img src="https://i.imgur.com/yDj1ZRy.png" width="200"> <br>

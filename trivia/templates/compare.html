@@ -1,32 +1,32 @@
 {% extends "layout.html" %}
 
 {% block title %}
-    Vergelijk jezelf!
+    Compare yourself!
 {% endblock %}
 
 {% block main %}
 <link rel="stylesheet" type="text/css" href="./static/styles.css" />
 <div class="row">
    <div class="column">
-   <a href="{{ url_for('questions') }}" class="btn btn-default">Geef mij 10 vragen!</a>
-   <a href="{{ url_for('index') }}" class="btn btn-default">Ga terug naar index!</a>
+   <a href="{{ url_for('questions') }}" class="btn btn-default">Give me 10 questions!</a>
+   <a href="{{ url_for('index') }}" class="btn btn-default">Go back to index!</a>
    </div>
 
    <div class="column">
         <table class="table table-bordered">
             <thead>
-                <th>Jij hebt goed</th>
-                <th>Jouw Superscore C is</th>
-                <th>{{ data[1]["name"] }} heeft goed</th>
-                <th>{{ data[1]["name"] }} heeft Superscore C </th>
+                <th>You have correct</th>
+                <th>Your CounTrivia Score is</th>
+                <th>{{ data[1]["name"] }} total correct</th>
+                <th>{{ data[1]["name"] }} CounTrivia Score </th>
             </thead>
             <tbody>
 
                 <tr>
-                <td>{{ data[0]["correct"] }} ({{data[0]["rank_nr"]}}e plaats)</td>
-                <td>{{ data[0]["score"] }} ({{data[0]["rank_score"]}}e plaats)</td>
-                <td>{{ data[1]["correct"]}} ({{data[1]["rank_nr"]}}e plaats)</td>
-                <td>{{ data[1]["score"] }} ({{data[1]["rank_score"]}}e plaats)</td>
+                <td>{{ data[0]["correct"] }} (Place on leaderboard {{data[0]["rank_nr"]}} )</td>
+                <td>{{ data[0]["score"] }} (Place on leaderboard {{data[0]["rank_score"]}} )</td>
+                <td>{{ data[1]["correct"]}} (Place on leaderboard {{data[1]["rank_nr"]}} )</td>
+                <td>{{ data[1]["score"] }} (Place on leaderboard {{data[1]["rank_score"]}} )</td>
 
                 </tr>
 
