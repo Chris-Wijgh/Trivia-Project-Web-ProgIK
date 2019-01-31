@@ -29,3 +29,7 @@ Deze webapp beschikt over de volgende features: Je kan je registeren, inloggen e
 ### Guide
 
 In deze repository staan een aantal files die onze webapp maken. Er zijn een aantal hoofddelen: De Database waarin we onze gebruikers gegevens, statistieken en vragen beheren, Application.py waarin alle approutes staan, Functions.py waarin alle losse functies staan die nodig zijn om de webapp te laten werken, Templates waarin alle html templates staan en tot slot Static waarin alle css staat. 
+
+### Demo-Video
+
+https://youtu.be/OAH7X_Ppjmc
